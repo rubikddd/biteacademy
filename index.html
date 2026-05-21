@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Periodic Table Flash Cards</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #0f172a, #1e293b);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 30px 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .atomic-number {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      margin-bottom: 10px;
+    }
+
+    .symbol {
+      font-size: 5rem;
+      font-weight: bold;
+      margin: 10px 0;
+      color: #38bdf8;
+    }
+
+    .name {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .mass {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    button {
+      margin-top: 25px;
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #7dd3fc;
+    }
+
+    @media (max-width: 480px) {
+      .symbol {
+        font-size: 4rem;
+      }
+
+      .name {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Periodic Flash Cards</h1>
+
+    <div class="card">
+      <div class="atomic-number" id="atomicNumber"></div>
+      <div class="symbol" id="symbol"></div>
+      <div class="name" id="name"></div>
+      <div class="mass" id="mass"></div>
+    </div>
+
+    <button onclick="showRandomElement()">
+      Next Random Element
+    </button>
+  </div>
+
+  <script>
+    const elements = [
+      { number: 1, symbol: 'H', name: 'Hydrogen', mass: '1.008' },
+      { number: 2, symbol: 'He', name: 'Helium', mass: '4.0026' },
+      { number: 3, symbol: 'Li', name: 'Lithium', mass: '6.94' },
+      { number: 4, symbol: 'Be', name: 'Beryllium', mass: '9.0122' },
+      { number: 5, symbol: 'B', name: 'Boron', mass: '10.81' },
+      { number: 6, symbol: 'C', name: 'Carbon', mass: '12.011' },
+      { number: 7, symbol: 'N', name: 'Nitrogen', mass: '14.007' },
+      { number: 8, symbol: 'O', name: 'Oxygen', mass: '15.999' },
+      { number: 9, symbol: 'F', name: 'Fluorine', mass: '18.998' },
+      { number: 10, symbol: 'Ne', name: 'Neon', mass: '20.180' },
+      { number: 11, symbol: 'Na', name: 'Sodium', mass: '22.990' },
+      { number: 12, symbol: 'Mg', name: 'Magnesium', mass: '24.305' },
+      { number: 13, symbol: 'Al', name: 'Aluminum', mass: '26.982' },
+      { number: 14, symbol: 'Si', name: 'Silicon', mass: '28.085' },
+      { number: 15, symbol: 'P', name: 'Phosphorus', mass: '30.974' },
+      { number: 16, symbol: 'S', name: 'Sulfur', mass: '32.06' },
+      { number: 17, symbol: 'Cl', name: 'Chlorine', mass: '35.45' },
+      { number: 18, symbol: 'Ar', name: 'Argon', mass: '39.948' },
+      { number: 19, symbol: 'K', name: 'Potassium', mass: '39.098' },
+      { number: 20, symbol: 'Ca', name: 'Calcium', mass: '40.078' }
+    ];
+
+    function showRandomElement() {
+      const randomIndex = Math.floor(Math.random() * elements.length);
+      const element = elements[randomIndex];
+
+      document.getElementById('atomicNumber').textContent =
+        `Atomic Number: ${element.number}`;
+
+      document.getElementById('symbol').textContent =
+        element.symbol;
+
+      document.getElementById('name').textContent =
+        element.name;
+
+      document.getElementById('mass').textContent =
+        `Atomic Mass: ${element.mass}`;
+    }
+
+    // Show an element immediately when page loads
+    showRandomElement();
+  </script>
+</body>
+</html>

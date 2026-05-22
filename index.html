@@ -9,17 +9,31 @@
     * {
       box-sizing: border-box;
       font-family: Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
-      padding: 20px;
+      padding: 16px;
       background: white;
       color: black;
+
+      overscroll-behavior: none;
     }
 
     .top-bar {
-      margin-bottom: 20px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-bar select {
+      width: auto;
+      max-width: 33vw;
+      flex: 0 1 auto;
+      white-space: nowrap;
     }
 
     .container {
@@ -29,7 +43,7 @@
     }
 
     h1 {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       font-size: 2rem;
     }
 
@@ -37,9 +51,9 @@
       position: relative;
 
       border: 4px solid rgba(0,0,0,0.12);
-      border-radius: 18px;
+      border-radius: 22px;
 
-      min-height: 380px;
+      min-height: 420px;
 
       padding: 24px;
 
@@ -48,7 +62,18 @@
       justify-content: center;
       align-items: center;
 
-      transition: background-color 0.25s ease;
+      transition:
+        background-color 0.25s ease,
+        transform 0.12s ease;
+
+      user-select: none;
+      touch-action: pan-y;
+
+      cursor: pointer;
+    }
+
+    .card:active {
+      transform: scale(0.99);
     }
 
     .atomic-number {
@@ -95,26 +120,83 @@
     }
 
     .buttons {
-      margin-top: 20px;
+      margin-top: 18px;
 
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
     button,
     select {
       font-size: 1rem;
-      padding: 12px;
+      padding: 14px 16px;
+
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.15);
+
+      background: white;
+    }
+
+    button {
+      font-weight: bold;
+    }
+
+    .popup {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+
+      background: rgba(0,0,0,0.88);
+      color: white;
+
+      padding: 14px 18px;
+      border-radius: 14px;
+
+      font-size: 0.95rem;
+      text-align: center;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition: opacity 0.25s ease;
+
+      z-index: 999;
+    }
+
+    .popup.show {
+      opacity: 1;
+    }
+
+    .hint {
+      margin-top: 14px;
+      font-size: 0.9rem;
+      opacity: 0.6;
     }
 
     @media (max-width: 480px) {
+
+      body {
+        padding: 12px;
+      }
+
+      .card {
+        min-height: 72vh;
+      }
+
       .symbol {
-        font-size: 4.5rem;
+        font-size: 4.8rem;
       }
 
       .name {
-        font-size: 1.6rem;
+        font-size: 1.7rem;
+      }
+
+      button,
+      select {
+        font-size: 1.05rem;
+        padding: 16px;
       }
     }
   </style>
@@ -123,11 +205,14 @@
 <body>
 
   <div class="top-bar">
-    <select id="quizMode" onchange="showRandomElement()">
+    <select id="quizMode" onchange="changeQuizMode()">
       <option value="all">All</option>
       <option value="name">Name</option>
       <option value="symbol">Symbol</option>
-      <option value="Z">Atomic Number(Z)</option>
+      <option value="Z">Z</option>
+    </select>
+
+    <select id="profileSelect" onchange="changeProfile()">
     </select>
   </div>
 
@@ -150,21 +235,141 @@
     </div>
 
     <div class="buttons">
-      <button onclick="showRandomElement()">Next</button>
+      <button onclick="previousElement()">◀ Prev</button>
+      <button onclick="nextElement()">Next ▶</button>
+
       <button onclick="showAnswer()">Show</button>
+      <button onclick="refreshDeck()">Refresh</button>
+    </div>
+
+    <div class="hint">
+      Tap card to reveal • Swipe left/right to navigate
     </div>
 
   </div>
+  <div class="popup" id="popup"></div>
 
   <script>
-    const elCard = document.getElementById("card")
-    const elZ = document.getElementById("Z");
-    const elSymbol = document.getElementById("symbol");
-    const elName = document.getElementById("name");
-    const elMass = document.getElementById("mass");
-    const elClassification = document.getElementById("classification");
-
-    // Classification colors matching your screenshot
+    const elements = [
+        { Z:   1, symbol: "H",  name: "Hydrogen",      row: 1, classification: 5, mass: "1.008"  }
+       ,{ Z:   2, symbol: "He", name: "Helium",        row: 1, classification: 6, mass: "4.0026" }
+       ,{ Z:   3, symbol: "Li", name: "Lithium",       row: 2, classification: 0, mass: "6.94"   }
+       ,{ Z:   4, symbol: "Be", name: "Beryllium",     row: 2, classification: 1, mass: "9.0122" }
+       ,{ Z:   5, symbol: "B",  name: "Boron",         row: 2, classification: 4, mass: "10.81"  }
+       ,{ Z:   6, symbol: "C",  name: "Carbon",        row: 2, classification: 5, mass: "12.011" }
+       ,{ Z:   7, symbol: "N",  name: "Nitrogen",      row: 2, classification: 5, mass: "14.007" }
+       ,{ Z:   8, symbol: "O",  name: "Oxygen",        row: 2, classification: 5, mass: "15.999" }
+       ,{ Z:   9, symbol: "F",  name: "Fluorine",      row: 2, classification: 5, mass: "18.998" }
+       ,{ Z:  10, symbol: "Ne", name: "Neon",          row: 2, classification: 6, mass: "20.180" }
+       ,{ Z:  11, symbol: "Na", name: "Sodium",        row: 3, classification: 0, mass: "22.990" }
+       ,{ Z:  12, symbol: "Mg", name: "Magnesium",     row: 3, classification: 1, mass: "24.305" }
+       ,{ Z:  13, symbol: "Al", name: "Aluminum",      row: 3, classification: 3, mass: "26.982" }
+       ,{ Z:  14, symbol: "Si", name: "Silicon",       row: 3, classification: 4, mass: "28.085" }
+       ,{ Z:  15, symbol: "P",  name: "Phosphorus",    row: 3, classification: 5, mass: "30.974" }
+       ,{ Z:  16, symbol: "S",  name: "Sulfur",        row: 3, classification: 5, mass: "32.06"  }
+       ,{ Z:  17, symbol: "Cl", name: "Chlorine",      row: 3, classification: 5, mass: "35.45"  }
+       ,{ Z:  18, symbol: "Ar", name: "Argon",         row: 3, classification: 6, mass: "39.948" }
+       ,{ Z:  19, symbol: "K",  name: "Potassium",     row: 4, classification: 0, mass: "39.098" }
+       ,{ Z:  20, symbol: "Ca", name: "Calcium",       row: 4, classification: 1, mass: "40.078" }
+       ,{ Z:  21, symbol: "Sc", name: "Scandium",      row: 4, classification: 2, mass: "44.956" }
+       ,{ Z:  22, symbol: "Ti", name: "Titanium",      row: 4, classification: 2, mass: "47.867" }
+       ,{ Z:  23, symbol: "V",  name: "Vanadium",      row: 4, classification: 2, mass: "50.942" }
+       ,{ Z:  24, symbol: "Cr", name: "Chromium",      row: 4, classification: 2, mass: "51.996" }
+       ,{ Z:  25, symbol: "Mn", name: "Manganese",     row: 4, classification: 2, mass: "54.938" }
+       ,{ Z:  26, symbol: "Fe", name: "Iron",          row: 4, classification: 2, mass: "55.845" }
+       ,{ Z:  27, symbol: "Co", name: "Cobalt",        row: 4, classification: 2, mass: "58.933" }
+       ,{ Z:  28, symbol: "Ni", name: "Nickel",        row: 4, classification: 2, mass: "58.693" }
+       ,{ Z:  29, symbol: "Cu", name: "Copper",        row: 4, classification: 2, mass: "63.546" }
+       ,{ Z:  30, symbol: "Zn", name: "Zinc",          row: 4, classification: 2, mass: "65.38"  }
+       ,{ Z:  31, symbol: "Ga", name: "Gallium",       row: 4, classification: 3, mass: "69.723" }
+       ,{ Z:  32, symbol: "Ge", name: "Germanium",     row: 4, classification: 4, mass: "72.630" }
+       ,{ Z:  33, symbol: "As", name: "Arsenic",       row: 4, classification: 4, mass: "74.922" }
+       ,{ Z:  34, symbol: "Se", name: "Selenium",      row: 4, classification: 5, mass: "78.971" }
+       ,{ Z:  35, symbol: "Br", name: "Bromine",       row: 4, classification: 5, mass: "79.904" }
+       ,{ Z:  36, symbol: "Kr", name: "Krypton",       row: 4, classification: 6, mass: "83.798" }
+       ,{ Z:  37, symbol: "Rb", name: "Rubidium",      row: 5, classification: 0, mass: "85.468" }
+       ,{ Z:  38, symbol: "Sr", name: "Strontium",     row: 5, classification: 1, mass: "87.62"  }
+       ,{ Z:  39, symbol: "Y",  name: "Yttrium",       row: 5, classification: 2, mass: "88.906" }
+       ,{ Z:  40, symbol: "Zr", name: "Zirconium",     row: 5, classification: 2, mass: "91.224" }
+       ,{ Z:  41, symbol: "Nb", name: "Niobium",       row: 5, classification: 2, mass: "92.906" }
+       ,{ Z:  42, symbol: "Mo", name: "Molybdenum",    row: 5, classification: 2, mass: "95.95"  }
+       ,{ Z:  43, symbol: "Tc", name: "Technetium",    row: 5, classification: 2, mass: "98"     }
+       ,{ Z:  44, symbol: "Ru", name: "Ruthenium",     row: 5, classification: 2, mass: "101.07" }
+       ,{ Z:  45, symbol: "Rh", name: "Rhodium",       row: 5, classification: 2, mass: "102.91" }
+       ,{ Z:  46, symbol: "Pd", name: "Palladium",     row: 5, classification: 2, mass: "106.42" }
+       ,{ Z:  47, symbol: "Ag", name: "Silver",        row: 5, classification: 2, mass: "107.87" }
+       ,{ Z:  48, symbol: "Cd", name: "Cadmium",       row: 5, classification: 2, mass: "112.41" }
+       ,{ Z:  49, symbol: "In", name: "Indium",        row: 5, classification: 3, mass: "114.82" }
+       ,{ Z:  50, symbol: "Sn", name: "Tin",           row: 5, classification: 3, mass: "118.71" }
+       ,{ Z:  51, symbol: "Sb", name: "Antimony",      row: 5, classification: 4, mass: "121.76" }
+       ,{ Z:  52, symbol: "Te", name: "Tellurium",     row: 5, classification: 4, mass: "127.60" }
+       ,{ Z:  53, symbol: "I",  name: "Iodine",        row: 5, classification: 5, mass: "126.90" }
+       ,{ Z:  54, symbol: "Xe", name: "Xenon",         row: 5, classification: 6, mass: "131.29" }
+       ,{ Z:  55, symbol: "Cs", name: "Cesium",        row: 6, classification: 0, mass: "132.91" }
+       ,{ Z:  56, symbol: "Ba", name: "Barium",        row: 6, classification: 1, mass: "137.33" }
+       ,{ Z:  57, symbol: "La", name: "Lanthanum",     row: 6, classification: 7, mass: "138.91" }
+       ,{ Z:  58, symbol: "Ce", name: "Cerium",        row: 6, classification: 7, mass: "140.12" }
+       ,{ Z:  59, symbol: "Pr", name: "Praseodymium",  row: 6, classification: 7, mass: "140.91" }
+       ,{ Z:  60, symbol: "Nd", name: "Neodymium",     row: 6, classification: 7, mass: "144.24" }
+       ,{ Z:  61, symbol: "Pm", name: "Promethium",    row: 6, classification: 7, mass: "145"    }
+       ,{ Z:  62, symbol: "Sm", name: "Samarium",      row: 6, classification: 7, mass: "150.36" }
+       ,{ Z:  63, symbol: "Eu", name: "Europium",      row: 6, classification: 7, mass: "151.96" }
+       ,{ Z:  64, symbol: "Gd", name: "Gadolinium",    row: 6, classification: 7, mass: "157.25" }
+       ,{ Z:  65, symbol: "Tb", name: "Terbium",       row: 6, classification: 7, mass: "158.93" }
+       ,{ Z:  66, symbol: "Dy", name: "Dysprosium",    row: 6, classification: 7, mass: "162.50" }
+       ,{ Z:  67, symbol: "Ho", name: "Holmium",       row: 6, classification: 7, mass: "164.93" }
+       ,{ Z:  68, symbol: "Er", name: "Erbium",        row: 6, classification: 7, mass: "167.26" }
+       ,{ Z:  69, symbol: "Tm", name: "Thulium",       row: 6, classification: 7, mass: "168.93" }
+       ,{ Z:  70, symbol: "Yb", name: "Ytterbium",     row: 6, classification: 7, mass: "173.05" }
+       ,{ Z:  71, symbol: "Lu", name: "Lutetium",      row: 6, classification: 7, mass: "174.97" }
+       ,{ Z:  72, symbol: "Hf", name: "Hafnium",       row: 6, classification: 2, mass: "178.49" }
+       ,{ Z:  73, symbol: "Ta", name: "Tantalum",      row: 6, classification: 2, mass: "180.95" }
+       ,{ Z:  74, symbol: "W",  name: "Tungsten",      row: 6, classification: 2, mass: "183.84" }
+       ,{ Z:  75, symbol: "Re", name: "Rhenium",       row: 6, classification: 2, mass: "186.21" }
+       ,{ Z:  76, symbol: "Os", name: "Osmium",        row: 6, classification: 2, mass: "190.23" }
+       ,{ Z:  77, symbol: "Ir", name: "Iridium",       row: 6, classification: 2, mass: "192.22" }
+       ,{ Z:  78, symbol: "Pt", name: "Platinum",      row: 6, classification: 2, mass: "195.08" }
+       ,{ Z:  79, symbol: "Au", name: "Gold",          row: 6, classification: 2, mass: "196.97" }
+       ,{ Z:  80, symbol: "Hg", name: "Mercury",       row: 6, classification: 2, mass: "200.59" }
+       ,{ Z:  81, symbol: "Tl", name: "Thallium",      row: 6, classification: 3, mass: "204.38" }
+       ,{ Z:  82, symbol: "Pb", name: "Lead",          row: 6, classification: 3, mass: "207.2"  }
+       ,{ Z:  83, symbol: "Bi", name: "Bismuth",       row: 6, classification: 3, mass: "208.98" }
+       ,{ Z:  84, symbol: "Po", name: "Polonium",      row: 6, classification: 4, mass: "209"    }
+       ,{ Z:  85, symbol: "At", name: "Astatine",      row: 6, classification: 4, mass: "210"    }
+       ,{ Z:  86, symbol: "Rn", name: "Radon",         row: 6, classification: 6, mass: "222"    }
+       ,{ Z:  87, symbol: "Fr", name: "Francium",      row: 7, classification: 0, mass: "223"    }
+       ,{ Z:  88, symbol: "Ra", name: "Radium",        row: 7, classification: 1, mass: "226"    }
+       ,{ Z:  89, symbol: "Ac", name: "Actinium",      row: 7, classification: 8, mass: "227"    }
+       ,{ Z:  90, symbol: "Th", name: "Thorium",       row: 7, classification: 8, mass: "232.04" }
+       ,{ Z:  91, symbol: "Pa", name: "Protactinium",  row: 7, classification: 8, mass: "231.04" }
+       ,{ Z:  92, symbol: "U",  name: "Uranium",       row: 7, classification: 8, mass: "238.03" }
+       ,{ Z:  93, symbol: "Np", name: "Neptunium",     row: 7, classification: 8, mass: "237"    }
+       ,{ Z:  94, symbol: "Pu", name: "Plutonium",     row: 7, classification: 8, mass: "244"    }
+       ,{ Z:  95, symbol: "Am", name: "Americium",     row: 7, classification: 8, mass: "243"    }
+       ,{ Z:  96, symbol: "Cm", name: "Curium",        row: 7, classification: 8, mass: "247"    }
+       ,{ Z:  97, symbol: "Bk", name: "Berkelium",     row: 7, classification: 8, mass: "247"    }
+       ,{ Z:  98, symbol: "Cf", name: "Californium",   row: 7, classification: 8, mass: "251"    }
+       ,{ Z:  99, symbol: "Es", name: "Einsteinium",   row: 7, classification: 8, mass: "252"    }
+       ,{ Z: 100, symbol: "Fm", name: "Fermium",       row: 7, classification: 8, mass: "257"    }
+       ,{ Z: 101, symbol: "Md", name: "Mendelevium",   row: 7, classification: 8, mass: "258"    }
+       ,{ Z: 102, symbol: "No", name: "Nobelium",      row: 7, classification: 8, mass: "259"    }
+       ,{ Z: 103, symbol: "Lr", name: "Lawrencium",    row: 7, classification: 8, mass: "266"    }
+       ,{ Z: 104, symbol: "Rf", name: "Rutherfordium", row: 7, classification: 2, mass: "267"    }
+       ,{ Z: 105, symbol: "Db", name: "Dubnium",       row: 7, classification: 2, mass: "268"    }
+       ,{ Z: 106, symbol: "Sg", name: "Seaborgium",    row: 7, classification: 2, mass: "269"    }
+       ,{ Z: 107, symbol: "Bh", name: "Bohrium",       row: 7, classification: 2, mass: "270"    }
+       ,{ Z: 108, symbol: "Hs", name: "Hassium",       row: 7, classification: 2, mass: "277"    }
+       ,{ Z: 109, symbol: "Mt", name: "Meitnerium",    row: 7, classification: 2, mass: "278"    }
+       ,{ Z: 110, symbol: "Ds", name: "Darmstadtium",  row: 7, classification: 2, mass: "281"    }
+       ,{ Z: 111, symbol: "Rg", name: "Roentgenium",   row: 7, classification: 2, mass: "282"    }
+       ,{ Z: 112, symbol: "Cn", name: "Copernicium",   row: 7, classification: 2, mass: "285"    }
+       ,{ Z: 113, symbol: "Nh", name: "Nihonium",      row: 7, classification: 3, mass: "286"    }
+       ,{ Z: 114, symbol: "Fl", name: "Flerovium",     row: 7, classification: 3, mass: "289"    }
+       ,{ Z: 115, symbol: "Mc", name: "Moscovium",     row: 7, classification: 3, mass: "290"    }
+       ,{ Z: 116, symbol: "Lv", name: "Livermorium",   row: 7, classification: 3, mass: "293"    }
+       ,{ Z: 117, symbol: "Ts", name: "Tennessine",    row: 7, classification: 5, mass: "294"    }
+       ,{ Z: 118, symbol: "Og", name: "Oganesson",     row: 7, classification: 6, mass: "294"    }
+    ];
 
     const classifications = [
         { idx: 0, color: "#e2ca62", name: "Alkali metal"          }
@@ -178,173 +383,247 @@
        ,{ idx: 8, color: "#e1bfd0", name: "Actinoid"              }
     ];
 
-    const elements = [
-        { Z:   1, symbol: "H",  name: "Hydrogen",      classification: 5, mass: "1.008"  }
-       ,{ Z:   2, symbol: "He", name: "Helium",        classification: 6, mass: "4.0026" }
-       ,{ Z:   3, symbol: "Li", name: "Lithium",       classification: 0, mass: "6.94"   }
-       ,{ Z:   4, symbol: "Be", name: "Beryllium",     classification: 1, mass: "9.0122" }
-       ,{ Z:   5, symbol: "B",  name: "Boron",         classification: 4, mass: "10.81"  }
-       ,{ Z:   6, symbol: "C",  name: "Carbon",        classification: 5, mass: "12.011" }
-       ,{ Z:   7, symbol: "N",  name: "Nitrogen",      classification: 5, mass: "14.007" }
-       ,{ Z:   8, symbol: "O",  name: "Oxygen",        classification: 5, mass: "15.999" }
-       ,{ Z:   9, symbol: "F",  name: "Fluorine",      classification: 5, mass: "18.998" }
-       ,{ Z:  10, symbol: "Ne", name: "Neon",          classification: 6, mass: "20.180" }
-       ,{ Z:  11, symbol: "Na", name: "Sodium",        classification: 0, mass: "22.990" }
-       ,{ Z:  12, symbol: "Mg", name: "Magnesium",     classification: 1, mass: "24.305" }
-       ,{ Z:  13, symbol: "Al", name: "Aluminum",      classification: 3, mass: "26.982" }
-       ,{ Z:  14, symbol: "Si", name: "Silicon",       classification: 4, mass: "28.085" }
-       ,{ Z:  15, symbol: "P",  name: "Phosphorus",    classification: 5, mass: "30.974" }
-       ,{ Z:  16, symbol: "S",  name: "Sulfur",        classification: 5, mass: "32.06"  }
-       ,{ Z:  17, symbol: "Cl", name: "Chlorine",      classification: 5, mass: "35.45"  }
-       ,{ Z:  18, symbol: "Ar", name: "Argon",         classification: 6, mass: "39.948" }
-       ,{ Z:  19, symbol: "K",  name: "Potassium",     classification: 0, mass: "39.098" }
-       ,{ Z:  20, symbol: "Ca", name: "Calcium",       classification: 1, mass: "40.078" }
-       ,{ Z:  21, symbol: "Sc", name: "Scandium",      classification: 2, mass: "44.956" }
-       ,{ Z:  22, symbol: "Ti", name: "Titanium",      classification: 2, mass: "47.867" }
-       ,{ Z:  23, symbol: "V",  name: "Vanadium",      classification: 2, mass: "50.942" }
-       ,{ Z:  24, symbol: "Cr", name: "Chromium",      classification: 2, mass: "51.996" }
-       ,{ Z:  25, symbol: "Mn", name: "Manganese",     classification: 2, mass: "54.938" }
-       ,{ Z:  26, symbol: "Fe", name: "Iron",          classification: 2, mass: "55.845" }
-       ,{ Z:  27, symbol: "Co", name: "Cobalt",        classification: 2, mass: "58.933" }
-       ,{ Z:  28, symbol: "Ni", name: "Nickel",        classification: 2, mass: "58.693" }
-       ,{ Z:  29, symbol: "Cu", name: "Copper",        classification: 2, mass: "63.546" }
-       ,{ Z:  30, symbol: "Zn", name: "Zinc",          classification: 2, mass: "65.38"  }
-       ,{ Z:  31, symbol: "Ga", name: "Gallium",       classification: 3, mass: "69.723" }
-       ,{ Z:  32, symbol: "Ge", name: "Germanium",     classification: 4, mass: "72.630" }
-       ,{ Z:  33, symbol: "As", name: "Arsenic",       classification: 4, mass: "74.922" }
-       ,{ Z:  34, symbol: "Se", name: "Selenium",      classification: 5, mass: "78.971" }
-       ,{ Z:  35, symbol: "Br", name: "Bromine",       classification: 5, mass: "79.904" }
-       ,{ Z:  36, symbol: "Kr", name: "Krypton",       classification: 6, mass: "83.798" }
-       ,{ Z:  37, symbol: "Rb", name: "Rubidium",      classification: 0, mass: "85.468" }
-       ,{ Z:  38, symbol: "Sr", name: "Strontium",     classification: 1, mass: "87.62"  }
-       ,{ Z:  39, symbol: "Y",  name: "Yttrium",       classification: 2, mass: "88.906" }
-       ,{ Z:  40, symbol: "Zr", name: "Zirconium",     classification: 2, mass: "91.224" }
-       ,{ Z:  41, symbol: "Nb", name: "Niobium",       classification: 2, mass: "92.906" }
-       ,{ Z:  42, symbol: "Mo", name: "Molybdenum",    classification: 2, mass: "95.95"  }
-       ,{ Z:  43, symbol: "Tc", name: "Technetium",    classification: 2, mass: "98"     }
-       ,{ Z:  44, symbol: "Ru", name: "Ruthenium",     classification: 2, mass: "101.07" }
-       ,{ Z:  45, symbol: "Rh", name: "Rhodium",       classification: 2, mass: "102.91" }
-       ,{ Z:  46, symbol: "Pd", name: "Palladium",     classification: 2, mass: "106.42" }
-       ,{ Z:  47, symbol: "Ag", name: "Silver",        classification: 2, mass: "107.87" }
-       ,{ Z:  48, symbol: "Cd", name: "Cadmium",       classification: 2, mass: "112.41" }
-       ,{ Z:  49, symbol: "In", name: "Indium",        classification: 3, mass: "114.82" }
-       ,{ Z:  50, symbol: "Sn", name: "Tin",           classification: 3, mass: "118.71" }
-       ,{ Z:  51, symbol: "Sb", name: "Antimony",      classification: 4, mass: "121.76" }
-       ,{ Z:  52, symbol: "Te", name: "Tellurium",     classification: 4, mass: "127.60" }
-       ,{ Z:  53, symbol: "I",  name: "Iodine",        classification: 5, mass: "126.90" }
-       ,{ Z:  54, symbol: "Xe", name: "Xenon",         classification: 6, mass: "131.29" }
-       ,{ Z:  55, symbol: "Cs", name: "Cesium",        classification: 0, mass: "132.91" }
-       ,{ Z:  56, symbol: "Ba", name: "Barium",        classification: 1, mass: "137.33" }
-       ,{ Z:  57, symbol: "La", name: "Lanthanum",     classification: 7, mass: "138.91" }
-//       ,{ Z:  58, symbol: "Ce", name: "Cerium",        classification: 7, mass: "140.12" }
-//       ,{ Z:  59, symbol: "Pr", name: "Praseodymium",  classification: 7, mass: "140.91" }
-//       ,{ Z:  60, symbol: "Nd", name: "Neodymium",     classification: 7, mass: "144.24" }
-//       ,{ Z:  61, symbol: "Pm", name: "Promethium",    classification: 7, mass: "145"    }
-//       ,{ Z:  62, symbol: "Sm", name: "Samarium",      classification: 7, mass: "150.36" }
-//       ,{ Z:  63, symbol: "Eu", name: "Europium",      classification: 7, mass: "151.96" }
-//       ,{ Z:  64, symbol: "Gd", name: "Gadolinium",    classification: 7, mass: "157.25" }
-//       ,{ Z:  65, symbol: "Tb", name: "Terbium",       classification: 7, mass: "158.93" }
-//       ,{ Z:  66, symbol: "Dy", name: "Dysprosium",    classification: 7, mass: "162.50" }
-//       ,{ Z:  67, symbol: "Ho", name: "Holmium",       classification: 7, mass: "164.93" }
-//       ,{ Z:  68, symbol: "Er", name: "Erbium",        classification: 7, mass: "167.26" }
-//       ,{ Z:  69, symbol: "Tm", name: "Thulium",       classification: 7, mass: "168.93" }
-//       ,{ Z:  70, symbol: "Yb", name: "Ytterbium",     classification: 7, mass: "173.05" }
-//       ,{ Z:  71, symbol: "Lu", name: "Lutetium",      classification: 7, mass: "174.97" }
-       ,{ Z:  72, symbol: "Hf", name: "Hafnium",       classification: 2, mass: "178.49" }
-       ,{ Z:  73, symbol: "Ta", name: "Tantalum",      classification: 2, mass: "180.95" }
-       ,{ Z:  74, symbol: "W",  name: "Tungsten",      classification: 2, mass: "183.84" }
-       ,{ Z:  75, symbol: "Re", name: "Rhenium",       classification: 2, mass: "186.21" }
-       ,{ Z:  76, symbol: "Os", name: "Osmium",        classification: 2, mass: "190.23" }
-       ,{ Z:  77, symbol: "Ir", name: "Iridium",       classification: 2, mass: "192.22" }
-       ,{ Z:  78, symbol: "Pt", name: "Platinum",      classification: 2, mass: "195.08" }
-       ,{ Z:  79, symbol: "Au", name: "Gold",          classification: 2, mass: "196.97" }
-       ,{ Z:  80, symbol: "Hg", name: "Mercury",       classification: 2, mass: "200.59" }
-       ,{ Z:  81, symbol: "Tl", name: "Thallium",      classification: 3, mass: "204.38" }
-       ,{ Z:  82, symbol: "Pb", name: "Lead",          classification: 3, mass: "207.2"  }
-       ,{ Z:  83, symbol: "Bi", name: "Bismuth",       classification: 3, mass: "208.98" }
-       ,{ Z:  84, symbol: "Po", name: "Polonium",      classification: 4, mass: "209"    }
-       ,{ Z:  85, symbol: "At", name: "Astatine",      classification: 4, mass: "210"    }
-       ,{ Z:  86, symbol: "Rn", name: "Radon",         classification: 6, mass: "222"    }
-       ,{ Z:  87, symbol: "Fr", name: "Francium",      classification: 0, mass: "223"    }
-       ,{ Z:  88, symbol: "Ra", name: "Radium",        classification: 1, mass: "226"    }
-       ,{ Z:  89, symbol: "Ac", name: "Actinium",      classification: 8, mass: "227"    }
-//       ,{ Z:  90, symbol: "Th", name: "Thorium",       classification: 8, mass: "232.04" }
-//       ,{ Z:  91, symbol: "Pa", name: "Protactinium",  classification: 8, mass: "231.04" }
-       ,{ Z:  92, symbol: "U",  name: "Uranium",       classification: 8, mass: "238.03" }
-//       ,{ Z:  93, symbol: "Np", name: "Neptunium",     classification: 8, mass: "237"    }
-       ,{ Z:  94, symbol: "Pu", name: "Plutonium",     classification: 8, mass: "244"    }
-//       ,{ Z:  95, symbol: "Am", name: "Americium",     classification: 8, mass: "243"    }
-//       ,{ Z:  96, symbol: "Cm", name: "Curium",        classification: 8, mass: "247"    }
-//       ,{ Z:  97, symbol: "Bk", name: "Berkelium",     classification: 8, mass: "247"    }
-//       ,{ Z:  98, symbol: "Cf", name: "Californium",   classification: 8, mass: "251"    }
-//       ,{ Z:  99, symbol: "Es", name: "Einsteinium",   classification: 8, mass: "252"    }
-//       ,{ Z: 100, symbol: "Fm", name: "Fermium",       classification: 8, mass: "257"    }
-//       ,{ Z: 101, symbol: "Md", name: "Mendelevium",   classification: 8, mass: "258"    }
-//       ,{ Z: 102, symbol: "No", name: "Nobelium",      classification: 8, mass: "259"    }
-//       ,{ Z: 103, symbol: "Lr", name: "Lawrencium",    classification: 8, mass: "266"    }
-//       ,{ Z: 104, symbol: "Rf", name: "Rutherfordium", classification: 2, mass: "267"    }
-//       ,{ Z: 105, symbol: "Db", name: "Dubnium",       classification: 2, mass: "268"    }
-//       ,{ Z: 106, symbol: "Sg", name: "Seaborgium",    classification: 2, mass: "269"    }
-//       ,{ Z: 107, symbol: "Bh", name: "Bohrium",       classification: 2, mass: "270"    }
-//       ,{ Z: 108, symbol: "Hs", name: "Hassium",       classification: 2, mass: "277"    }
-//       ,{ Z: 109, symbol: "Mt", name: "Meitnerium",    classification: 2, mass: "278"    }
-//       ,{ Z: 110, symbol: "Ds", name: "Darmstadtium",  classification: 2, mass: "281"    }
-//       ,{ Z: 111, symbol: "Rg", name: "Roentgenium",   classification: 2, mass: "282"    }
-//       ,{ Z: 112, symbol: "Cn", name: "Copernicium",   classification: 2, mass: "285"    }
-//       ,{ Z: 113, symbol: "Nh", name: "Nihonium",      classification: 3, mass: "286"    }
-//       ,{ Z: 114, symbol: "Fl", name: "Flerovium",     classification: 3, mass: "289"    }
-//       ,{ Z: 115, symbol: "Mc", name: "Moscovium",     classification: 3, mass: "290"    }
-//       ,{ Z: 116, symbol: "Lv", name: "Livermorium",   classification: 3, mass: "293"    }
-//       ,{ Z: 117, symbol: "Ts", name: "Tennessine",    classification: 5, mass: "294"    }
-//       ,{ Z: 118, symbol: "Og", name: "Oganesson",     classification: 6, mass: "294"    }
-    ];
+    // =========================================================
+    // FILTER PROFILES
+    // =========================================================
 
-    function showRandomElement() {
-      const element = elements[Math.floor(Math.random() * elements.length)];
+    const profiles = [
+        { name: "Common", filter: [ {row:[1,2,3,4,5,6]}, {Z:[87,88,92,94]} ] }
+       ,{ name: "Metalloid", filter: [ {classification:[4]} ] }
+       ,{ name: "Transition", filter: [ {classification:[2]} ] }
+       ,{ name: "All" }
+    ];
+    // Active filter
+    let filter = profiles[0].filter;
+
+    const elCard = document.getElementById("card")
+    const elZ = document.getElementById("Z");
+    const elSymbol = document.getElementById("symbol");
+    const elName = document.getElementById("name");
+    const elMass = document.getElementById("mass");
+    const elClassification = document.getElementById("classification");
+    const elMode = document.getElementById("quizMode");
+    const elProfile = document.getElementById("profileSelect");
+    
+    // =========================================================
+    // RANDOMIZED DECK SYSTEM
+    // =========================================================
+
+    let deck = [];
+    let currentIndex = 0;
+
+    function showWarning(message) {
+      //alert(message);
+      const popup = document.getElementById("popup");
+      popup.textContent = message;
+      popup.classList.add("show");
+      clearTimeout(showWarning.timeout);
+      showWarning.timeout = setTimeout(() => {
+        popup.classList.remove("show");
+      }, 2000);
+    }
+
+    function populateProfiles() {
+      elProfile.innerHTML = "";
+      profiles.forEach((profile, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = profile.name;
+        elProfile.appendChild(option);
+      });
+    }
+
+    function changeProfile() {
+        const profileIndex = Number(elProfile.value);
+        localStorage.setItem("periodic-profile-index", profileIndex);
+        filter = profiles[profileIndex].filter;
+        refreshDeck();
+    }
+
+    function changeQuizMode() {
+        localStorage.setItem("periodic-quiz-mode",elMode.value);
+        applyQuizMode();
+    }
+
+    function shuffle(array) {
+      const arr = [...array];
+
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+
+      return arr;
+    }
+
+    function refreshDeck() {
+      // No filter rules -> include all elements
+      if (!filter || !filter.length) {
+        deck = shuffle(elements);
+      } else {
+        deck = shuffle(
+          elements.filter(element =>
+            // Element matches if it matches ANY rule
+            filter.some(rule =>
+              // Rule matches only if ALL attributes match
+              Object.entries(rule).every(
+                ([key, allowedValues]) =>
+                  Array.isArray(allowedValues)
+                  && allowedValues.includes(element[key])
+              )
+            )
+          )
+        );
+      }
+
+      currentIndex = 0;
+      if (deck.length === 0) {
+        showWarning("No elements matched filter.");
+        return;
+      }
+      renderCurrentElement();
+    }
+
+    function renderCurrentElement() {
+
+      const element = deck[currentIndex];
 
       elZ.textContent = element.Z;
       elSymbol.textContent = element.symbol;
       elName.textContent = element.name;
       elMass.textContent = element.mass;
-      elClassification.textContent = classifications[element.classification].name;
-      elCard.style.backgroundColor = classifications[element.classification].color;
+
+      elClassification.textContent =
+        classifications[element.classification].name;
+
+      elCard.style.backgroundColor =
+        classifications[element.classification].color;
 
       applyQuizMode();
     }
 
-    function applyQuizMode() {
-      const mode = document.getElementById("quizMode").value;
+    function nextElement() {
+        if (currentIndex >= deck.length - 1) {
+          showWarning("Reached end of deck. Tap Refresh or reload page.");
+          return;
+        }
+        currentIndex++;
+        renderCurrentElement();
+    }
 
-      // Show all first
+    function previousElement() {
+        if (currentIndex <= 0) {
+          showWarning("Already at beginning of deck.");
+          return;
+        }
+        currentIndex--;
+        renderCurrentElement();
+    }
+
+    // =========================================================
+    // QUIZ MODES
+    // =========================================================
+
+    function applyQuizMode() {
+
+      const mode = elMode.value;
+
       if (mode === "all") {
         showAnswer();
-      } else {
+        return;
+      }
 
-        // Hide first and then show info according to quiz mode
-        elZ.classList.add("hidden-info");
-        elSymbol.classList.add("hidden-info");
-        elName.classList.add("hidden-info");
-        elMass.classList.add("hidden-info");
-        elClassification.classList.add("hidden-info");
-        if (mode === "name") {
-            elName.classList.remove("hidden-info");
-        } else if (mode === "symbol") {
-            elSymbol.classList.remove("hidden-info");
-        } else if (mode === "Z") {
-            elZ.classList.remove("hidden-info");
-        }
+      elZ.classList.add("hidden-info");
+      elSymbol.classList.add("hidden-info");
+      elName.classList.add("hidden-info");
+      elMass.classList.add("hidden-info");
+      elClassification.classList.add("hidden-info");
+
+      if (mode === "name") {
+        elName.classList.remove("hidden-info");
+      }
+      else if (mode === "symbol") {
+        elSymbol.classList.remove("hidden-info");
+      }
+      else if (mode === "Z") {
+        elZ.classList.remove("hidden-info");
       }
     }
 
     function showAnswer() {
-        elZ.classList.remove("hidden-info");
-        elSymbol.classList.remove("hidden-info");
-        elName.classList.remove("hidden-info");
-        elMass.classList.remove("hidden-info");
-        elClassification.classList.remove("hidden-info");
+
+      elZ.classList.remove("hidden-info");
+      elSymbol.classList.remove("hidden-info");
+      elName.classList.remove("hidden-info");
+      elMass.classList.remove("hidden-info");
+      elClassification.classList.remove("hidden-info");
     }
 
-    showRandomElement();
+    // =========================================================
+    // TAP CARD TO REVEAL
+    // =========================================================
+
+    elCard.addEventListener("click", () => {
+
+      const mode = elMode.value;
+
+      if (mode !== "all") {
+        showAnswer();
+      }
+    });
+
+    // =========================================================
+    // SWIPE SUPPORT
+    // =========================================================
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    elCard.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    elCard.addEventListener("touchend", (e) => {
+
+      touchEndX = e.changedTouches[0].screenX;
+
+      const deltaX = touchEndX - touchStartX;
+      const threshold = 50;
+
+      if (Math.abs(deltaX) < threshold) {
+        return;
+      }
+
+      if (deltaX < 0) {
+        nextElement();
+      } else {
+        previousElement();
+      }
+
+    }, { passive: true });
+
+    // =========================================================
+    // INITIALIZE
+    // =========================================================
+
+    // Initialize profile dropdown
+    populateProfiles();
+    // Restore saved profile filter
+    const savedProfileIndex = Number(localStorage.getItem("periodic-profile-index"));
+    const initialProfileIndex =
+      Number.isInteger(savedProfileIndex)
+      && savedProfileIndex >= 0
+      && savedProfileIndex < profiles.length
+        ? savedProfileIndex
+        : 0;
+    elProfile.value = initialProfileIndex;
+    filter = profiles[initialProfileIndex].filter;
+
+    // Restore saved quiz mode
+    const savedQuizMode = localStorage.getItem("periodic-quiz-mode");
+    if (savedQuizMode && Array.from(elMode.options).map(opt=>opt.value).includes(savedQuizMode)) { elMode.value = savedQuizMode; }
+
+    refreshDeck();
 
   </script>
 

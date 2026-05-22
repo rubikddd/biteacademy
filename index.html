@@ -227,13 +227,15 @@
       <option value="Z">Z</option>
     </select>
 
+    <div id="counter"></div>
+
     <select id="profileSelect" onchange="changeProfile()">
     </select>
   </div>
 
   <div class="container">
 
-    <h1>Periodic Flash Cards</h1>
+    <h1 style="display:none">Periodic Flash Cards</h1>
 
     <div class="card" id="card">
 
@@ -251,7 +253,7 @@
 
     </div>
 
-    <div class="buttons">
+    <div class="buttons" style="display:none">
       <button onclick="previousElement()">◀ Prev</button>
       <button onclick="nextElement()">Next ▶</button>
 
@@ -260,7 +262,7 @@
     </div>
 
     <div class="hint">
-      Tap card to reveal • Swipe left/right to navigate
+      Tap card to <span onclick="showAnswer()">reveal</span> • Swipe <span onclick="previousElement()">left</span>/<span onclick="nextElement()">right</span> to navigate
     </div>
 
   </div>
@@ -422,7 +424,8 @@
     const elClassification = document.getElementById("classification");
     const elMode = document.getElementById("quizMode");
     const elProfile = document.getElementById("profileSelect");
-    
+    const elCounter = document.getElementById("counter");
+
     // =========================================================
     // RANDOMIZED DECK SYSTEM
     // =========================================================
@@ -461,6 +464,14 @@
     function changeQuizMode() {
         localStorage.setItem("periodic-quiz-mode",elMode.value);
         applyQuizMode();
+    }
+
+    function updateCounter() {
+      if (!deck.length) {
+        elCounter.textContent = "";
+        return;
+      }
+      elCounter.textContent = `${currentIndex + 1} of ${deck.length}`;
     }
 
     function shuffle(array) {
@@ -519,6 +530,7 @@
       elCard.style.backgroundColor =
         classifications[element.classification].color;
 
+      updateCounter();
       applyQuizMode();
     }
 

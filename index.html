@@ -268,124 +268,124 @@
 
   <script>
     const elements = [
-        { Z:   1, symbol: "H",  name: "Hydrogen",      nameZh: "氢", row: 1, classification: 5, mass: "1.008" , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:   2, symbol: "He", name: "Helium",        nameZh: "氦", row: 1, classification: 6, mass: "4.0026", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:   3, symbol: "Li", name: "Lithium",       nameZh: "锂", row: 2, classification: 0, mass: "6.94"  , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:   4, symbol: "Be", name: "Beryllium",     nameZh: "铍", row: 2, classification: 1, mass: "9.0122", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:   5, symbol: "B",  name: "Boron",         nameZh: "硼", row: 2, classification: 4, mass: "10.81" , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:   6, symbol: "C",  name: "Carbon",        nameZh: "碳", row: 2, classification: 5, mass: "12.011", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:   7, symbol: "N",  name: "Nitrogen",      nameZh: "氮", row: 2, classification: 5, mass: "14.007", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:   8, symbol: "O",  name: "Oxygen",        nameZh: "氧", row: 2, classification: 5, mass: "15.999", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:   9, symbol: "F",  name: "Fluorine",      nameZh: "氟", row: 2, classification: 5, mass: "18.998", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  10, symbol: "Ne", name: "Neon",          nameZh: "氖", row: 2, classification: 6, mass: "20.180", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  11, symbol: "Na", name: "Sodium",        nameZh: "钠", row: 3, classification: 0, mass: "22.990", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  12, symbol: "Mg", name: "Magnesium",     nameZh: "镁", row: 3, classification: 1, mass: "24.305", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  13, symbol: "Al", name: "Aluminum",      nameZh: "铝", row: 3, classification: 3, mass: "26.982", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  14, symbol: "Si", name: "Silicon",       nameZh: "硅", row: 3, classification: 4, mass: "28.085", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  15, symbol: "P",  name: "Phosphorus",    nameZh: "磷", row: 3, classification: 5, mass: "30.974", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  16, symbol: "S",  name: "Sulfur",        nameZh: "硫", row: 3, classification: 5, mass: "32.06" , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  17, symbol: "Cl", name: "Chlorine",      nameZh: "氯", row: 3, classification: 5, mass: "35.45" , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  18, symbol: "Ar", name: "Argon",         nameZh: "氩", row: 3, classification: 6, mass: "39.948", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  19, symbol: "K",  name: "Potassium",     nameZh: "钾", row: 4, classification: 0, mass: "39.098", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  20, symbol: "Ca", name: "Calcium",       nameZh: "钙", row: 4, classification: 1, mass: "40.078", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  21, symbol: "Sc", name: "Scandium",      nameZh: "钪", row: 4, classification: 2, mass: "44.956", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  22, symbol: "Ti", name: "Titanium",      nameZh: "钛", row: 4, classification: 2, mass: "47.867", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  23, symbol: "V",  name: "Vanadium",      nameZh: "钒", row: 4, classification: 2, mass: "50.942", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  24, symbol: "Cr", name: "Chromium",      nameZh: "铬", row: 4, classification: 2, mass: "51.996", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  25, symbol: "Mn", name: "Manganese",     nameZh: "锰", row: 4, classification: 2, mass: "54.938", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  26, symbol: "Fe", name: "Iron",          nameZh: "铁", row: 4, classification: 2, mass: "55.845", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  27, symbol: "Co", name: "Cobalt",        nameZh: "钴", row: 4, classification: 2, mass: "58.933", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  28, symbol: "Ni", name: "Nickel",        nameZh: "镍", row: 4, classification: 2, mass: "58.693", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  29, symbol: "Cu", name: "Copper",        nameZh: "铜", row: 4, classification: 2, mass: "63.546", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  30, symbol: "Zn", name: "Zinc",          nameZh: "锌", row: 4, classification: 2, mass: "65.38" , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  31, symbol: "Ga", name: "Gallium",       nameZh: "镓", row: 4, classification: 3, mass: "69.723", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  32, symbol: "Ge", name: "Germanium",     nameZh: "锗", row: 4, classification: 4, mass: "72.630", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  33, symbol: "As", name: "Arsenic",       nameZh: "砷", row: 4, classification: 4, mass: "74.922", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  34, symbol: "Se", name: "Selenium",      nameZh: "硒", row: 4, classification: 5, mass: "78.971", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  35, symbol: "Br", name: "Bromine",       nameZh: "溴", row: 4, classification: 5, mass: "79.904", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  36, symbol: "Kr", name: "Krypton",       nameZh: "氪", row: 4, classification: 6, mass: "83.798", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  37, symbol: "Rb", name: "Rubidium",      nameZh: "铷", row: 5, classification: 0, mass: "85.468", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  38, symbol: "Sr", name: "Strontium",     nameZh: "锶", row: 5, classification: 1, mass: "87.62" , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  39, symbol: "Y",  name: "Yttrium",       nameZh: "钇", row: 5, classification: 2, mass: "88.906", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  40, symbol: "Zr", name: "Zirconium",     nameZh: "锆", row: 5, classification: 2, mass: "91.224", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  41, symbol: "Nb", name: "Niobium",       nameZh: "铌", row: 5, classification: 2, mass: "92.906", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  42, symbol: "Mo", name: "Molybdenum",    nameZh: "钼", row: 5, classification: 2, mass: "95.95" , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  43, symbol: "Tc", name: "Technetium",    nameZh: "锝", row: 5, classification: 2, mass: "98"    , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  44, symbol: "Ru", name: "Ruthenium",     nameZh: "钌", row: 5, classification: 2, mass: "101.07", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  45, symbol: "Rh", name: "Rhodium",       nameZh: "铑", row: 5, classification: 2, mass: "102.91", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  46, symbol: "Pd", name: "Palladium",     nameZh: "钯", row: 5, classification: 2, mass: "106.42", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  47, symbol: "Ag", name: "Silver",        nameZh: "银", row: 5, classification: 2, mass: "107.87", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  48, symbol: "Cd", name: "Cadmium",       nameZh: "镉", row: 5, classification: 2, mass: "112.41", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  49, symbol: "In", name: "Indium",        nameZh: "铟", row: 5, classification: 3, mass: "114.82", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  50, symbol: "Sn", name: "Tin",           nameZh: "锡", row: 5, classification: 3, mass: "118.71", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  51, symbol: "Sb", name: "Antimony",      nameZh: "锑", row: 5, classification: 4, mass: "121.76", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  52, symbol: "Te", name: "Tellurium",     nameZh: "碲", row: 5, classification: 4, mass: "127.60", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  53, symbol: "I",  name: "Iodine",        nameZh: "碘", row: 5, classification: 5, mass: "126.90", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  54, symbol: "Xe", name: "Xenon",         nameZh: "氙", row: 5, classification: 6, mass: "131.29", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  55, symbol: "Cs", name: "Cesium",        nameZh: "铯", row: 6, classification: 0, mass: "132.91", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  56, symbol: "Ba", name: "Barium",        nameZh: "钡", row: 6, classification: 1, mass: "137.33", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  57, symbol: "La", name: "Lanthanum",     nameZh: "镧", row: 6, classification: 7, mass: "138.91", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  58, symbol: "Ce", name: "Cerium",        nameZh: "铈", row: 6, classification: 7, mass: "140.12", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  59, symbol: "Pr", name: "Praseodymium",  nameZh: "镨", row: 6, classification: 7, mass: "140.91", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  60, symbol: "Nd", name: "Neodymium",     nameZh: "钕", row: 6, classification: 7, mass: "144.24", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  61, symbol: "Pm", name: "Promethium",    nameZh: "钷", row: 6, classification: 7, mass: "145"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  62, symbol: "Sm", name: "Samarium",      nameZh: "钐", row: 6, classification: 7, mass: "150.36", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  63, symbol: "Eu", name: "Europium",      nameZh: "铕", row: 6, classification: 7, mass: "151.96", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  64, symbol: "Gd", name: "Gadolinium",    nameZh: "钆", row: 6, classification: 7, mass: "157.25", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  65, symbol: "Tb", name: "Terbium",       nameZh: "铽", row: 6, classification: 7, mass: "158.93", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  66, symbol: "Dy", name: "Dysprosium",    nameZh: "镝", row: 6, classification: 7, mass: "162.50", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  67, symbol: "Ho", name: "Holmium",       nameZh: "钬", row: 6, classification: 7, mass: "164.93", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  68, symbol: "Er", name: "Erbium",        nameZh: "铒", row: 6, classification: 7, mass: "167.26", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  69, symbol: "Tm", name: "Thulium",       nameZh: "铥", row: 6, classification: 7, mass: "168.93", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  70, symbol: "Yb", name: "Ytterbium",     nameZh: "镱", row: 6, classification: 7, mass: "173.05", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  71, symbol: "Lu", name: "Lutetium",      nameZh: "镥", row: 6, classification: 7, mass: "174.97", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  72, symbol: "Hf", name: "Hafnium",       nameZh: "铪", row: 6, classification: 2, mass: "178.49", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  73, symbol: "Ta", name: "Tantalum",      nameZh: "钽", row: 6, classification: 2, mass: "180.95", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  74, symbol: "W",  name: "Tungsten",      nameZh: "钨", row: 6, classification: 2, mass: "183.84", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  75, symbol: "Re", name: "Rhenium",       nameZh: "铼", row: 6, classification: 2, mass: "186.21", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  76, symbol: "Os", name: "Osmium",        nameZh: "锇", row: 6, classification: 2, mass: "190.23", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  77, symbol: "Ir", name: "Iridium",       nameZh: "铱", row: 6, classification: 2, mass: "192.22", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  78, symbol: "Pt", name: "Platinum",      nameZh: "铂", row: 6, classification: 2, mass: "195.08", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  79, symbol: "Au", name: "Gold",          nameZh: "金", row: 6, classification: 2, mass: "196.97", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  80, symbol: "Hg", name: "Mercury",       nameZh: "汞", row: 6, classification: 2, mass: "200.59", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  81, symbol: "Tl", name: "Thallium",      nameZh: "铊", row: 6, classification: 3, mass: "204.38", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  82, symbol: "Pb", name: "Lead",          nameZh: "铅", row: 6, classification: 3, mass: "207.2" , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  83, symbol: "Bi", name: "Bismuth",       nameZh: "铋", row: 6, classification: 3, mass: "208.98", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  84, symbol: "Po", name: "Polonium",      nameZh: "钋", row: 6, classification: 4, mass: "209"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  85, symbol: "At", name: "Astatine",      nameZh: "砹", row: 6, classification: 4, mass: "210"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  86, symbol: "Rn", name: "Radon",         nameZh: "氡", row: 6, classification: 6, mass: "222"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  87, symbol: "Fr", name: "Francium",      nameZh: "钫", row: 7, classification: 0, mass: "223"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  88, symbol: "Ra", name: "Radium",        nameZh: "镭", row: 7, classification: 1, mass: "226"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  89, symbol: "Ac", name: "Actinium",      nameZh: "锕", row: 7, classification: 8, mass: "227"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  90, symbol: "Th", name: "Thorium",       nameZh: "钍", row: 7, classification: 8, mass: "232.04", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  91, symbol: "Pa", name: "Protactinium",  nameZh: "镤", row: 7, classification: 8, mass: "231.04", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  92, symbol: "U",  name: "Uranium",       nameZh: "铀", row: 7, classification: 8, mass: "238.03", wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  93, symbol: "Np", name: "Neptunium",     nameZh: "镎", row: 7, classification: 8, mass: "237"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  94, symbol: "Pu", name: "Plutonium",     nameZh: "钚", row: 7, classification: 8, mass: "244"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  95, symbol: "Am", name: "Americium",     nameZh: "镅", row: 7, classification: 8, mass: "243"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  96, symbol: "Cm", name: "Curium",        nameZh: "锔", row: 7, classification: 8, mass: "247"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  97, symbol: "Bk", name: "Berkelium",     nameZh: "锫", row: 7, classification: 8, mass: "247"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  98, symbol: "Cf", name: "Californium",   nameZh: "锎", row: 7, classification: 8, mass: "251"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z:  99, symbol: "Es", name: "Einsteinium",   nameZh: "锿", row: 7, classification: 8, mass: "252"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 100, symbol: "Fm", name: "Fermium",       nameZh: "镄", row: 7, classification: 8, mass: "257"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 101, symbol: "Md", name: "Mendelevium",   nameZh: "钔", row: 7, classification: 8, mass: "258"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 102, symbol: "No", name: "Nobelium",      nameZh: "锘", row: 7, classification: 8, mass: "259"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 103, symbol: "Lr", name: "Lawrencium",    nameZh: "铹", row: 7, classification: 8, mass: "266"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 104, symbol: "Rf", name: "Rutherfordium", nameZh: "𬬻", row: 7, classification: 2, mass: "267"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 105, symbol: "Db", name: "Dubnium",       nameZh: "𬭊", row: 7, classification: 2, mass: "268"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 106, symbol: "Sg", name: "Seaborgium",    nameZh: "𬭳", row: 7, classification: 2, mass: "269"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 107, symbol: "Bh", name: "Bohrium",       nameZh: "𬭛", row: 7, classification: 2, mass: "270"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 108, symbol: "Hs", name: "Hassium",       nameZh: "𬭶", row: 7, classification: 2, mass: "277"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 109, symbol: "Mt", name: "Meitnerium",    nameZh: "鿏", row: 7, classification: 2, mass: "278"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 110, symbol: "Ds", name: "Darmstadtium",  nameZh: "𫟼", row: 7, classification: 2, mass: "281"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 111, symbol: "Rg", name: "Roentgenium",   nameZh: "𬬭", row: 7, classification: 2, mass: "282"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 112, symbol: "Cn", name: "Copernicium",   nameZh: "鿔", row: 7, classification: 2, mass: "285"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 113, symbol: "Nh", name: "Nihonium",      nameZh: "鿭", row: 7, classification: 3, mass: "286"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 114, symbol: "Fl", name: "Flerovium",     nameZh: "𫓧", row: 7, classification: 3, mass: "289"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 115, symbol: "Mc", name: "Moscovium",     nameZh: "镆", row: 7, classification: 3, mass: "290"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 116, symbol: "Lv", name: "Livermorium",   nameZh: "𫟷", row: 7, classification: 3, mass: "293"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 117, symbol: "Ts", name: "Tennessine",    nameZh: "鿬", row: 7, classification: 5, mass: "294"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
-       ,{ Z: 118, symbol: "Og", name: "Oganesson",     nameZh: "鿫", row: 7, classification: 6, mass: "294"   , wikiZh: "https://zh.wikipedia.org/wiki/%E6%B0%A2" }
+        { Z:   1, symbol: "H",  name: "Hydrogen",      nameZh: "氢", row: 1, classification: 5, mass: "1.008" , wikiZh: "https://zh.wikipedia.org/wiki/氢" }
+       ,{ Z:   2, symbol: "He", name: "Helium",        nameZh: "氦", row: 1, classification: 6, mass: "4.0026", wikiZh: "https://zh.wikipedia.org/wiki/氦" }
+       ,{ Z:   3, symbol: "Li", name: "Lithium",       nameZh: "锂", row: 2, classification: 0, mass: "6.94"  , wikiZh: "https://zh.wikipedia.org/wiki/锂" }
+       ,{ Z:   4, symbol: "Be", name: "Beryllium",     nameZh: "铍", row: 2, classification: 1, mass: "9.0122", wikiZh: "https://zh.wikipedia.org/wiki/铍" }
+       ,{ Z:   5, symbol: "B",  name: "Boron",         nameZh: "硼", row: 2, classification: 4, mass: "10.81" , wikiZh: "https://zh.wikipedia.org/wiki/硼" }
+       ,{ Z:   6, symbol: "C",  name: "Carbon",        nameZh: "碳", row: 2, classification: 5, mass: "12.011", wikiZh: "https://zh.wikipedia.org/wiki/碳" }
+       ,{ Z:   7, symbol: "N",  name: "Nitrogen",      nameZh: "氮", row: 2, classification: 5, mass: "14.007", wikiZh: "https://zh.wikipedia.org/wiki/氮" }
+       ,{ Z:   8, symbol: "O",  name: "Oxygen",        nameZh: "氧", row: 2, classification: 5, mass: "15.999", wikiZh: "https://zh.wikipedia.org/wiki/氧" }
+       ,{ Z:   9, symbol: "F",  name: "Fluorine",      nameZh: "氟", row: 2, classification: 5, mass: "18.998", wikiZh: "https://zh.wikipedia.org/wiki/氟" }
+       ,{ Z:  10, symbol: "Ne", name: "Neon",          nameZh: "氖", row: 2, classification: 6, mass: "20.180", wikiZh: "https://zh.wikipedia.org/wiki/氖" }
+       ,{ Z:  11, symbol: "Na", name: "Sodium",        nameZh: "钠", row: 3, classification: 0, mass: "22.990", wikiZh: "https://zh.wikipedia.org/wiki/钠" }
+       ,{ Z:  12, symbol: "Mg", name: "Magnesium",     nameZh: "镁", row: 3, classification: 1, mass: "24.305", wikiZh: "https://zh.wikipedia.org/wiki/镁" }
+       ,{ Z:  13, symbol: "Al", name: "Aluminum",      nameZh: "铝", row: 3, classification: 3, mass: "26.982", wikiZh: "https://zh.wikipedia.org/wiki/铝" }
+       ,{ Z:  14, symbol: "Si", name: "Silicon",       nameZh: "硅", row: 3, classification: 4, mass: "28.085", wikiZh: "https://zh.wikipedia.org/wiki/硅" }
+       ,{ Z:  15, symbol: "P",  name: "Phosphorus",    nameZh: "磷", row: 3, classification: 5, mass: "30.974", wikiZh: "https://zh.wikipedia.org/wiki/磷" }
+       ,{ Z:  16, symbol: "S",  name: "Sulfur",        nameZh: "硫", row: 3, classification: 5, mass: "32.06" , wikiZh: "https://zh.wikipedia.org/wiki/硫" }
+       ,{ Z:  17, symbol: "Cl", name: "Chlorine",      nameZh: "氯", row: 3, classification: 5, mass: "35.45" , wikiZh: "https://zh.wikipedia.org/wiki/氯" }
+       ,{ Z:  18, symbol: "Ar", name: "Argon",         nameZh: "氩", row: 3, classification: 6, mass: "39.948", wikiZh: "https://zh.wikipedia.org/wiki/氩" }
+       ,{ Z:  19, symbol: "K",  name: "Potassium",     nameZh: "钾", row: 4, classification: 0, mass: "39.098", wikiZh: "https://zh.wikipedia.org/wiki/钾" }
+       ,{ Z:  20, symbol: "Ca", name: "Calcium",       nameZh: "钙", row: 4, classification: 1, mass: "40.078", wikiZh: "https://zh.wikipedia.org/wiki/钙" }
+       ,{ Z:  21, symbol: "Sc", name: "Scandium",      nameZh: "钪", row: 4, classification: 2, mass: "44.956", wikiZh: "https://zh.wikipedia.org/wiki/钪" }
+       ,{ Z:  22, symbol: "Ti", name: "Titanium",      nameZh: "钛", row: 4, classification: 2, mass: "47.867", wikiZh: "https://zh.wikipedia.org/wiki/钛" }
+       ,{ Z:  23, symbol: "V",  name: "Vanadium",      nameZh: "钒", row: 4, classification: 2, mass: "50.942", wikiZh: "https://zh.wikipedia.org/wiki/钒" }
+       ,{ Z:  24, symbol: "Cr", name: "Chromium",      nameZh: "铬", row: 4, classification: 2, mass: "51.996", wikiZh: "https://zh.wikipedia.org/wiki/铬" }
+       ,{ Z:  25, symbol: "Mn", name: "Manganese",     nameZh: "锰", row: 4, classification: 2, mass: "54.938", wikiZh: "https://zh.wikipedia.org/wiki/锰" }
+       ,{ Z:  26, symbol: "Fe", name: "Iron",          nameZh: "铁", row: 4, classification: 2, mass: "55.845", wikiZh: "https://zh.wikipedia.org/wiki/铁" }
+       ,{ Z:  27, symbol: "Co", name: "Cobalt",        nameZh: "钴", row: 4, classification: 2, mass: "58.933", wikiZh: "https://zh.wikipedia.org/wiki/钴" }
+       ,{ Z:  28, symbol: "Ni", name: "Nickel",        nameZh: "镍", row: 4, classification: 2, mass: "58.693", wikiZh: "https://zh.wikipedia.org/wiki/镍" }
+       ,{ Z:  29, symbol: "Cu", name: "Copper",        nameZh: "铜", row: 4, classification: 2, mass: "63.546", wikiZh: "https://zh.wikipedia.org/wiki/铜" }
+       ,{ Z:  30, symbol: "Zn", name: "Zinc",          nameZh: "锌", row: 4, classification: 2, mass: "65.38" , wikiZh: "https://zh.wikipedia.org/wiki/锌" }
+       ,{ Z:  31, symbol: "Ga", name: "Gallium",       nameZh: "镓", row: 4, classification: 3, mass: "69.723", wikiZh: "https://zh.wikipedia.org/wiki/镓" }
+       ,{ Z:  32, symbol: "Ge", name: "Germanium",     nameZh: "锗", row: 4, classification: 4, mass: "72.630", wikiZh: "https://zh.wikipedia.org/wiki/锗" }
+       ,{ Z:  33, symbol: "As", name: "Arsenic",       nameZh: "砷", row: 4, classification: 4, mass: "74.922", wikiZh: "https://zh.wikipedia.org/wiki/砷" }
+       ,{ Z:  34, symbol: "Se", name: "Selenium",      nameZh: "硒", row: 4, classification: 5, mass: "78.971", wikiZh: "https://zh.wikipedia.org/wiki/硒" }
+       ,{ Z:  35, symbol: "Br", name: "Bromine",       nameZh: "溴", row: 4, classification: 5, mass: "79.904", wikiZh: "https://zh.wikipedia.org/wiki/溴" }
+       ,{ Z:  36, symbol: "Kr", name: "Krypton",       nameZh: "氪", row: 4, classification: 6, mass: "83.798", wikiZh: "https://zh.wikipedia.org/wiki/氪" }
+       ,{ Z:  37, symbol: "Rb", name: "Rubidium",      nameZh: "铷", row: 5, classification: 0, mass: "85.468", wikiZh: "https://zh.wikipedia.org/wiki/铷" }
+       ,{ Z:  38, symbol: "Sr", name: "Strontium",     nameZh: "锶", row: 5, classification: 1, mass: "87.62" , wikiZh: "https://zh.wikipedia.org/wiki/锶" }
+       ,{ Z:  39, symbol: "Y",  name: "Yttrium",       nameZh: "钇", row: 5, classification: 2, mass: "88.906", wikiZh: "https://zh.wikipedia.org/wiki/钇" }
+       ,{ Z:  40, symbol: "Zr", name: "Zirconium",     nameZh: "锆", row: 5, classification: 2, mass: "91.224", wikiZh: "https://zh.wikipedia.org/wiki/锆" }
+       ,{ Z:  41, symbol: "Nb", name: "Niobium",       nameZh: "铌", row: 5, classification: 2, mass: "92.906", wikiZh: "https://zh.wikipedia.org/wiki/铌" }
+       ,{ Z:  42, symbol: "Mo", name: "Molybdenum",    nameZh: "钼", row: 5, classification: 2, mass: "95.95" , wikiZh: "https://zh.wikipedia.org/wiki/钼" }
+       ,{ Z:  43, symbol: "Tc", name: "Technetium",    nameZh: "锝", row: 5, classification: 2, mass: "98"    , wikiZh: "https://zh.wikipedia.org/wiki/锝" }
+       ,{ Z:  44, symbol: "Ru", name: "Ruthenium",     nameZh: "钌", row: 5, classification: 2, mass: "101.07", wikiZh: "https://zh.wikipedia.org/wiki/钌" }
+       ,{ Z:  45, symbol: "Rh", name: "Rhodium",       nameZh: "铑", row: 5, classification: 2, mass: "102.91", wikiZh: "https://zh.wikipedia.org/wiki/铑" }
+       ,{ Z:  46, symbol: "Pd", name: "Palladium",     nameZh: "钯", row: 5, classification: 2, mass: "106.42", wikiZh: "https://zh.wikipedia.org/wiki/钯" }
+       ,{ Z:  47, symbol: "Ag", name: "Silver",        nameZh: "银", row: 5, classification: 2, mass: "107.87", wikiZh: "https://zh.wikipedia.org/wiki/银" }
+       ,{ Z:  48, symbol: "Cd", name: "Cadmium",       nameZh: "镉", row: 5, classification: 2, mass: "112.41", wikiZh: "https://zh.wikipedia.org/wiki/镉" }
+       ,{ Z:  49, symbol: "In", name: "Indium",        nameZh: "铟", row: 5, classification: 3, mass: "114.82", wikiZh: "https://zh.wikipedia.org/wiki/铟" }
+       ,{ Z:  50, symbol: "Sn", name: "Tin",           nameZh: "锡", row: 5, classification: 3, mass: "118.71", wikiZh: "https://zh.wikipedia.org/wiki/锡" }
+       ,{ Z:  51, symbol: "Sb", name: "Antimony",      nameZh: "锑", row: 5, classification: 4, mass: "121.76", wikiZh: "https://zh.wikipedia.org/wiki/锑" }
+       ,{ Z:  52, symbol: "Te", name: "Tellurium",     nameZh: "碲", row: 5, classification: 4, mass: "127.60", wikiZh: "https://zh.wikipedia.org/wiki/碲" }
+       ,{ Z:  53, symbol: "I",  name: "Iodine",        nameZh: "碘", row: 5, classification: 5, mass: "126.90", wikiZh: "https://zh.wikipedia.org/wiki/碘" }
+       ,{ Z:  54, symbol: "Xe", name: "Xenon",         nameZh: "氙", row: 5, classification: 6, mass: "131.29", wikiZh: "https://zh.wikipedia.org/wiki/氙" }
+       ,{ Z:  55, symbol: "Cs", name: "Cesium",        nameZh: "铯", row: 6, classification: 0, mass: "132.91", wikiZh: "https://zh.wikipedia.org/wiki/铯" }
+       ,{ Z:  56, symbol: "Ba", name: "Barium",        nameZh: "钡", row: 6, classification: 1, mass: "137.33", wikiZh: "https://zh.wikipedia.org/wiki/钡" }
+       ,{ Z:  57, symbol: "La", name: "Lanthanum",     nameZh: "镧", row: 6, classification: 7, mass: "138.91", wikiZh: "https://zh.wikipedia.org/wiki/镧" }
+       ,{ Z:  58, symbol: "Ce", name: "Cerium",        nameZh: "铈", row: 6, classification: 7, mass: "140.12", wikiZh: "https://zh.wikipedia.org/wiki/铈" }
+       ,{ Z:  59, symbol: "Pr", name: "Praseodymium",  nameZh: "镨", row: 6, classification: 7, mass: "140.91", wikiZh: "https://zh.wikipedia.org/wiki/镨" }
+       ,{ Z:  60, symbol: "Nd", name: "Neodymium",     nameZh: "钕", row: 6, classification: 7, mass: "144.24", wikiZh: "https://zh.wikipedia.org/wiki/钕" }
+       ,{ Z:  61, symbol: "Pm", name: "Promethium",    nameZh: "钷", row: 6, classification: 7, mass: "145"   , wikiZh: "https://zh.wikipedia.org/wiki/钷" }
+       ,{ Z:  62, symbol: "Sm", name: "Samarium",      nameZh: "钐", row: 6, classification: 7, mass: "150.36", wikiZh: "https://zh.wikipedia.org/wiki/钐" }
+       ,{ Z:  63, symbol: "Eu", name: "Europium",      nameZh: "铕", row: 6, classification: 7, mass: "151.96", wikiZh: "https://zh.wikipedia.org/wiki/铕" }
+       ,{ Z:  64, symbol: "Gd", name: "Gadolinium",    nameZh: "钆", row: 6, classification: 7, mass: "157.25", wikiZh: "https://zh.wikipedia.org/wiki/钆" }
+       ,{ Z:  65, symbol: "Tb", name: "Terbium",       nameZh: "铽", row: 6, classification: 7, mass: "158.93", wikiZh: "https://zh.wikipedia.org/wiki/铽" }
+       ,{ Z:  66, symbol: "Dy", name: "Dysprosium",    nameZh: "镝", row: 6, classification: 7, mass: "162.50", wikiZh: "https://zh.wikipedia.org/wiki/镝" }
+       ,{ Z:  67, symbol: "Ho", name: "Holmium",       nameZh: "钬", row: 6, classification: 7, mass: "164.93", wikiZh: "https://zh.wikipedia.org/wiki/钬" }
+       ,{ Z:  68, symbol: "Er", name: "Erbium",        nameZh: "铒", row: 6, classification: 7, mass: "167.26", wikiZh: "https://zh.wikipedia.org/wiki/铒" }
+       ,{ Z:  69, symbol: "Tm", name: "Thulium",       nameZh: "铥", row: 6, classification: 7, mass: "168.93", wikiZh: "https://zh.wikipedia.org/wiki/铥" }
+       ,{ Z:  70, symbol: "Yb", name: "Ytterbium",     nameZh: "镱", row: 6, classification: 7, mass: "173.05", wikiZh: "https://zh.wikipedia.org/wiki/镱" }
+       ,{ Z:  71, symbol: "Lu", name: "Lutetium",      nameZh: "镥", row: 6, classification: 7, mass: "174.97", wikiZh: "https://zh.wikipedia.org/wiki/镥" }
+       ,{ Z:  72, symbol: "Hf", name: "Hafnium",       nameZh: "铪", row: 6, classification: 2, mass: "178.49", wikiZh: "https://zh.wikipedia.org/wiki/铪" }
+       ,{ Z:  73, symbol: "Ta", name: "Tantalum",      nameZh: "钽", row: 6, classification: 2, mass: "180.95", wikiZh: "https://zh.wikipedia.org/wiki/钽" }
+       ,{ Z:  74, symbol: "W",  name: "Tungsten",      nameZh: "钨", row: 6, classification: 2, mass: "183.84", wikiZh: "https://zh.wikipedia.org/wiki/钨" }
+       ,{ Z:  75, symbol: "Re", name: "Rhenium",       nameZh: "铼", row: 6, classification: 2, mass: "186.21", wikiZh: "https://zh.wikipedia.org/wiki/铼" }
+       ,{ Z:  76, symbol: "Os", name: "Osmium",        nameZh: "锇", row: 6, classification: 2, mass: "190.23", wikiZh: "https://zh.wikipedia.org/wiki/锇" }
+       ,{ Z:  77, symbol: "Ir", name: "Iridium",       nameZh: "铱", row: 6, classification: 2, mass: "192.22", wikiZh: "https://zh.wikipedia.org/wiki/铱" }
+       ,{ Z:  78, symbol: "Pt", name: "Platinum",      nameZh: "铂", row: 6, classification: 2, mass: "195.08", wikiZh: "https://zh.wikipedia.org/wiki/铂" }
+       ,{ Z:  79, symbol: "Au", name: "Gold",          nameZh: "金", row: 6, classification: 2, mass: "196.97", wikiZh: "https://zh.wikipedia.org/wiki/金" }
+       ,{ Z:  80, symbol: "Hg", name: "Mercury",       nameZh: "汞", row: 6, classification: 2, mass: "200.59", wikiZh: "https://zh.wikipedia.org/wiki/汞" }
+       ,{ Z:  81, symbol: "Tl", name: "Thallium",      nameZh: "铊", row: 6, classification: 3, mass: "204.38", wikiZh: "https://zh.wikipedia.org/wiki/铊" }
+       ,{ Z:  82, symbol: "Pb", name: "Lead",          nameZh: "铅", row: 6, classification: 3, mass: "207.2" , wikiZh: "https://zh.wikipedia.org/wiki/铅" }
+       ,{ Z:  83, symbol: "Bi", name: "Bismuth",       nameZh: "铋", row: 6, classification: 3, mass: "208.98", wikiZh: "https://zh.wikipedia.org/wiki/铋" }
+       ,{ Z:  84, symbol: "Po", name: "Polonium",      nameZh: "钋", row: 6, classification: 4, mass: "209"   , wikiZh: "https://zh.wikipedia.org/wiki/钋" }
+       ,{ Z:  85, symbol: "At", name: "Astatine",      nameZh: "砹", row: 6, classification: 4, mass: "210"   , wikiZh: "https://zh.wikipedia.org/wiki/砹" }
+       ,{ Z:  86, symbol: "Rn", name: "Radon",         nameZh: "氡", row: 6, classification: 6, mass: "222"   , wikiZh: "https://zh.wikipedia.org/wiki/氡" }
+       ,{ Z:  87, symbol: "Fr", name: "Francium",      nameZh: "钫", row: 7, classification: 0, mass: "223"   , wikiZh: "https://zh.wikipedia.org/wiki/钫" }
+       ,{ Z:  88, symbol: "Ra", name: "Radium",        nameZh: "镭", row: 7, classification: 1, mass: "226"   , wikiZh: "https://zh.wikipedia.org/wiki/镭" }
+       ,{ Z:  89, symbol: "Ac", name: "Actinium",      nameZh: "锕", row: 7, classification: 8, mass: "227"   , wikiZh: "https://zh.wikipedia.org/wiki/锕" }
+       ,{ Z:  90, symbol: "Th", name: "Thorium",       nameZh: "钍", row: 7, classification: 8, mass: "232.04", wikiZh: "https://zh.wikipedia.org/wiki/钍" }
+       ,{ Z:  91, symbol: "Pa", name: "Protactinium",  nameZh: "镤", row: 7, classification: 8, mass: "231.04", wikiZh: "https://zh.wikipedia.org/wiki/镤" }
+       ,{ Z:  92, symbol: "U",  name: "Uranium",       nameZh: "铀", row: 7, classification: 8, mass: "238.03", wikiZh: "https://zh.wikipedia.org/wiki/铀" }
+       ,{ Z:  93, symbol: "Np", name: "Neptunium",     nameZh: "镎", row: 7, classification: 8, mass: "237"   , wikiZh: "https://zh.wikipedia.org/wiki/镎" }
+       ,{ Z:  94, symbol: "Pu", name: "Plutonium",     nameZh: "钚", row: 7, classification: 8, mass: "244"   , wikiZh: "https://zh.wikipedia.org/wiki/钚" }
+       ,{ Z:  95, symbol: "Am", name: "Americium",     nameZh: "镅", row: 7, classification: 8, mass: "243"   , wikiZh: "https://zh.wikipedia.org/wiki/镅" }
+       ,{ Z:  96, symbol: "Cm", name: "Curium",        nameZh: "锔", row: 7, classification: 8, mass: "247"   , wikiZh: "https://zh.wikipedia.org/wiki/锔" }
+       ,{ Z:  97, symbol: "Bk", name: "Berkelium",     nameZh: "锫", row: 7, classification: 8, mass: "247"   , wikiZh: "https://zh.wikipedia.org/wiki/锫" }
+       ,{ Z:  98, symbol: "Cf", name: "Californium",   nameZh: "锎", row: 7, classification: 8, mass: "251"   , wikiZh: "https://zh.wikipedia.org/wiki/锎" }
+       ,{ Z:  99, symbol: "Es", name: "Einsteinium",   nameZh: "锿", row: 7, classification: 8, mass: "252"   , wikiZh: "https://zh.wikipedia.org/wiki/锿" }
+       ,{ Z: 100, symbol: "Fm", name: "Fermium",       nameZh: "镄", row: 7, classification: 8, mass: "257"   , wikiZh: "https://zh.wikipedia.org/wiki/镄" }
+       ,{ Z: 101, symbol: "Md", name: "Mendelevium",   nameZh: "钔", row: 7, classification: 8, mass: "258"   , wikiZh: "https://zh.wikipedia.org/wiki/钔" }
+       ,{ Z: 102, symbol: "No", name: "Nobelium",      nameZh: "锘", row: 7, classification: 8, mass: "259"   , wikiZh: "https://zh.wikipedia.org/wiki/锘" }
+       ,{ Z: 103, symbol: "Lr", name: "Lawrencium",    nameZh: "铹", row: 7, classification: 8, mass: "266"   , wikiZh: "https://zh.wikipedia.org/wiki/铹" }
+       ,{ Z: 104, symbol: "Rf", name: "Rutherfordium", nameZh: "𬬻", row: 7, classification: 2, mass: "267"   , wikiZh: "https://zh.wikipedia.org/wiki/𬬻" }
+       ,{ Z: 105, symbol: "Db", name: "Dubnium",       nameZh: "𬭊", row: 7, classification: 2, mass: "268"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭊" }
+       ,{ Z: 106, symbol: "Sg", name: "Seaborgium",    nameZh: "𬭳", row: 7, classification: 2, mass: "269"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭳" }
+       ,{ Z: 107, symbol: "Bh", name: "Bohrium",       nameZh: "𬭛", row: 7, classification: 2, mass: "270"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭛" }
+       ,{ Z: 108, symbol: "Hs", name: "Hassium",       nameZh: "𬭶", row: 7, classification: 2, mass: "277"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭶" }
+       ,{ Z: 109, symbol: "Mt", name: "Meitnerium",    nameZh: "鿏", row: 7, classification: 2, mass: "278"   , wikiZh: "https://zh.wikipedia.org/wiki/鿏" }
+       ,{ Z: 110, symbol: "Ds", name: "Darmstadtium",  nameZh: "𫟼", row: 7, classification: 2, mass: "281"   , wikiZh: "https://zh.wikipedia.org/wiki/𫟼" }
+       ,{ Z: 111, symbol: "Rg", name: "Roentgenium",   nameZh: "𬬭", row: 7, classification: 2, mass: "282"   , wikiZh: "https://zh.wikipedia.org/wiki/𬬭" }
+       ,{ Z: 112, symbol: "Cn", name: "Copernicium",   nameZh: "鿔", row: 7, classification: 2, mass: "285"   , wikiZh: "https://zh.wikipedia.org/wiki/鿔" }
+       ,{ Z: 113, symbol: "Nh", name: "Nihonium",      nameZh: "鿭", row: 7, classification: 3, mass: "286"   , wikiZh: "https://zh.wikipedia.org/wiki/鿭" }
+       ,{ Z: 114, symbol: "Fl", name: "Flerovium",     nameZh: "𫓧", row: 7, classification: 3, mass: "289"   , wikiZh: "https://zh.wikipedia.org/wiki/𫓧" }
+       ,{ Z: 115, symbol: "Mc", name: "Moscovium",     nameZh: "镆", row: 7, classification: 3, mass: "290"   , wikiZh: "https://zh.wikipedia.org/wiki/镆" }
+       ,{ Z: 116, symbol: "Lv", name: "Livermorium",   nameZh: "𫟷", row: 7, classification: 3, mass: "293"   , wikiZh: "https://zh.wikipedia.org/wiki/𫟷" }
+       ,{ Z: 117, symbol: "Ts", name: "Tennessine",    nameZh: "鿬", row: 7, classification: 5, mass: "294"   , wikiZh: "https://zh.wikipedia.org/wiki/鿬" }
+       ,{ Z: 118, symbol: "Og", name: "Oganesson",     nameZh: "鿫", row: 7, classification: 6, mass: "294"   , wikiZh: "https://zh.wikipedia.org/wiki/鿫" }
     ];
 
     const classifications = [

@@ -163,6 +163,56 @@ button {
 	opacity: 0.6;
 }
 
+.card {
+	position: relative;
+	border: 4px solid rgba(0,0,0,0.12);
+	border-radius: 22px;
+	min-height: 420px;
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	transition:
+		background-color 0.25s ease,
+		transform 0.25s cubic-bezier(.22,.61,.36,1),
+		opacity 0.25s ease;
+
+	user-select: none;
+	touch-action: pan-y;
+	cursor: pointer;
+
+	will-change: transform;
+}
+
+/* card follows finger */
+.card.dragging {
+	transition: none;
+}
+
+/* swipe away */
+.card.swipe-left {
+	transform: translateX(-120vw) rotate(-15deg);
+	opacity: 0;
+}
+
+.card.swipe-right {
+	transform: translateX(120vw) rotate(15deg);
+	opacity: 0;
+}
+
+/* incoming card */
+.card.enter-left {
+	transform: translateX(-120vw) rotate(-15deg);
+	opacity: 0;
+}
+
+.card.enter-right {
+	transform: translateX(120vw) rotate(15deg);
+	opacity: 0;
+}
+
 @media (max-width: 480px) {
 
 	body {
@@ -525,13 +575,61 @@ function renderCurrentElement() {
 	applyQuizMode();
 }
 
+let isAnimating = false;
+
+function animateCard(direction, callback) {
+
+	if (isAnimating) return;
+
+	isAnimating = true;
+
+	const exitClass =
+		direction === "next"
+			? "swipe-left"
+			: "swipe-right";
+
+	const enterClass =
+		direction === "next"
+			? "enter-right"
+			: "enter-left";
+
+	elCard.classList.add(exitClass);
+
+	setTimeout(() => {
+
+		callback();
+
+		elCard.classList.remove(exitClass);
+
+		elCard.classList.add(enterClass);
+
+		requestAnimationFrame(() => {
+
+			requestAnimationFrame(() => {
+
+				elCard.classList.remove(enterClass);
+
+				setTimeout(() => {
+					isAnimating = false;
+				}, 250);
+
+			});
+
+		});
+
+	}, 220);
+}
+
 function nextElement() {
 	if (currentIndex >= deck.length - 1) {
-		showWarning("Reached end of deck. Tap Refresh or reload page.");
+		showWarning("Reached end of deck.");
 		return;
 	}
-	currentIndex++;
-	renderCurrentElement();
+
+	animateCard("next", () => {
+		currentIndex++;
+		renderCurrentElement();
+	});
 }
 
 function previousElement() {
@@ -539,8 +637,11 @@ function previousElement() {
 		showWarning("Already at beginning of deck.");
 		return;
 	}
-	currentIndex--;
-	renderCurrentElement();
+
+	animateCard("prev", () => {
+		currentIndex--;
+		renderCurrentElement();
+	});
 }
 
 // =========================================================
@@ -599,35 +700,95 @@ elCard.addEventListener("click", () => {
 // SWIPE SUPPORT
 // =========================================================
 
-let touchStartX = 0;
-let touchEndX = 0;
+// let touchStartX = 0;
+// let touchEndX = 0;
+// 
+// elCard.addEventListener("touchstart", (e) => {
+// 	touchStartX = e.changedTouches[0].screenX;
+// }, {
+// 	passive: true
+// });
+// 
+// elCard.addEventListener("touchend", (e) => {
+// 
+// 	touchEndX = e.changedTouches[0].screenX;
+// 
+// 	const deltaX = touchEndX - touchStartX;
+// 	const threshold = 50;
+// 
+// 	if (Math.abs(deltaX) < threshold) {
+// 		return;
+// 	}
+// 
+// 	if (deltaX < 0) {
+// 		nextElement();
+// 	} else {
+// 		previousElement();
+// 	}
+// 
+// }, {
+// 	passive: true
+// });
+
+let startX = 0;
+let currentX = 0;
+let dragging = false;
 
 elCard.addEventListener("touchstart", (e) => {
-	touchStartX = e.changedTouches[0].screenX;
-}, {
-	passive: true
-});
 
-elCard.addEventListener("touchend", (e) => {
+	if (isAnimating) return;
 
-	touchEndX = e.changedTouches[0].screenX;
+	startX = e.touches[0].clientX;
+	currentX = startX;
+	dragging = true;
 
-	const deltaX = touchEndX - touchStartX;
-	const threshold = 50;
+	elCard.classList.add("dragging");
 
-	if (Math.abs(deltaX) < threshold) {
+}, { passive: true });
+
+elCard.addEventListener("touchmove", (e) => {
+
+	if (!dragging) return;
+
+	currentX = e.touches[0].clientX;
+
+	const dx = currentX - startX;
+
+	const rotate = dx * 0.05;
+	const opacity = 1 - Math.min(Math.abs(dx) / 300, 0.3);
+
+	elCard.style.transform =
+		`translateX(${dx}px) rotate(${rotate}deg)`;
+
+	elCard.style.opacity = opacity;
+
+}, { passive: true });
+
+elCard.addEventListener("touchend", () => {
+
+	if (!dragging) return;
+
+	dragging = false;
+
+	elCard.classList.remove("dragging");
+
+	const dx = currentX - startX;
+	const threshold = 80;
+
+	elCard.style.transform = "";
+	elCard.style.opacity = "";
+
+	if (Math.abs(dx) < threshold) {
 		return;
 	}
 
-	if (deltaX < 0) {
+	if (dx < 0) {
 		nextElement();
 	} else {
 		previousElement();
 	}
 
-}, {
-	passive: true
-});
+}, { passive: true });
 
 // =========================================================
 // INITIALIZE

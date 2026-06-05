@@ -1,666 +1,660 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Periodic Table Flash Cards</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Periodic Table Flash Cards</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+	<style>
+* {
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+	-webkit-tap-highlight-color: transparent;
+}
 
-    body {
-      margin: 0;
-      padding: 16px;
-      background: white;
-      color: black;
+body {
+	margin: 0;
+	padding: 16px;
+	background: white;
+	color: black;
+	overscroll-behavior: none;
+}
 
-      overscroll-behavior: none;
-    }
+.top-bar {
+	margin-bottom: 14px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
 
-    .top-bar {
-      margin-bottom: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
+.top-bar select {
+	width: auto;
+	max-width: 33vw;
+	flex: 0 1 auto;
+	white-space: nowrap;
+}
 
-    .top-bar select {
-      width: auto;
-      max-width: 33vw;
-      flex: 0 1 auto;
-      white-space: nowrap;
-    }
+.container {
+	max-width: 420px;
+	margin: auto;
+	text-align: center;
+}
 
-    .container {
-      max-width: 420px;
-      margin: auto;
-      text-align: center;
-    }
+h1 {
+	margin-bottom: 18px;
+	font-size: 2rem;
+}
 
-    h1 {
-      margin-bottom: 18px;
-      font-size: 2rem;
-    }
+.card {
+	position: relative;
+	border: 4px solid rgba(0,0,0,0.12);
+	border-radius: 22px;
+	min-height: 420px;
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	transition: background-color 0.25s ease,
+	transform 0.12s ease;
+	user-select: none;
+	touch-action: pan-y;
+	cursor: pointer;
+}
 
-    .card {
-      position: relative;
+.card:active {
+	transform: scale(0.99);
+}
 
-      border: 4px solid rgba(0,0,0,0.12);
-      border-radius: 22px;
+.atomic-number {
+	position: absolute;
+	top: 18px;
+	left: 18px;
+	font-size: 1.4rem;
+	font-weight: bold;
+}
 
-      min-height: 420px;
+.mass {
+	position: absolute;
+	top: 18px;
+	right: 18px;
+	font-size: 1rem;
+}
 
-      padding: 24px;
+.symbol {
+	font-size: 5.5rem;
+	font-weight: bold;
+	line-height: 1;
+	margin-bottom: 16px;
+}
 
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+.name {
+	font-size: 2rem;
+}
 
-      transition:
-        background-color 0.25s ease,
-        transform 0.12s ease;
+.name-zh {
+	margin-top: 8px;
+	font-size: 1.5rem;
+	color: rgba(0,0,0,0.75);
+	text-decoration: none;
+}
 
-      user-select: none;
-      touch-action: pan-y;
+.name-zh:hover {
+	/* text-decoration: underline; */
+}
 
-      cursor: pointer;
-    }
+.classification {
+	position: absolute;
+	bottom: 18px;
+	font-size: 1rem;
+	opacity: 0.75;
+	text-transform: capitalize;
+}
 
-    .card:active {
-      transform: scale(0.99);
-    }
+.hidden-info {
+	visibility: hidden;
+}
 
-    .atomic-number {
-      position: absolute;
-      top: 18px;
-      left: 18px;
+.buttons {
+	margin-top: 18px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
 
-      font-size: 1.4rem;
-      font-weight: bold;
-    }
+button,
+select {
+	font-size: 1rem;
+	padding: 14px 16px;
+	border-radius: 14px;
+	border: 1px solid rgba(0,0,0,0.15);
+	background: white;
+}
 
-    .mass {
-      position: absolute;
-      top: 18px;
-      right: 18px;
+button {
+	font-weight: bold;
+}
 
-      font-size: 1rem;
-    }
+.popup {
+	position: fixed;
+	left: 50%;
+	bottom: 24px;
+	transform: translateX(-50%);
+	background: rgba(0,0,0,0.88);
+	color: white;
+	padding: 14px 18px;
+	border-radius: 14px;
+	font-size: 0.95rem;
+	text-align: center;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.25s ease;
+	z-index: 999;
+}
 
-    .symbol {
-      font-size: 5.5rem;
-      font-weight: bold;
-      line-height: 1;
+.popup.show {
+	opacity: 1;
+}
 
-      margin-bottom: 16px;
-    }
+.hint {
+	margin-top: 14px;
+	font-size: 0.9rem;
+	opacity: 0.6;
+}
 
-    .name {
-      font-size: 2rem;
-    }
+@media (max-width: 480px) {
 
-    .name-zh {
-      margin-top: 8px;
-      font-size: 1.5rem;
-      color: rgba(0,0,0,0.75);
-      text-decoration: none;
-    }
+	body {
+		padding: 12px;
+	}
 
-    .name-zh:hover {
-      /* text-decoration: underline; */
-    }
+	.card {
+		min-height: 72vh;
+	}
 
-    .classification {
-      position: absolute;
-      bottom: 18px;
+	.symbol {
+		font-size: 4.8rem;
+	}
 
-      font-size: 1rem;
-      opacity: 0.75;
+	.name {
+		font-size: 1.7rem;
+	}
 
-      text-transform: capitalize;
-    }
+	.name-zh {
+		font-size: 1.35rem;
+	}
 
-    .hidden-info {
-      visibility: hidden;
-    }
-
-    .buttons {
-      margin-top: 18px;
-
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    button,
-    select {
-      font-size: 1rem;
-      padding: 14px 16px;
-
-      border-radius: 14px;
-      border: 1px solid rgba(0,0,0,0.15);
-
-      background: white;
-    }
-
-    button {
-      font-weight: bold;
-    }
-
-    .popup {
-      position: fixed;
-      left: 50%;
-      bottom: 24px;
-      transform: translateX(-50%);
-
-      background: rgba(0,0,0,0.88);
-      color: white;
-
-      padding: 14px 18px;
-      border-radius: 14px;
-
-      font-size: 0.95rem;
-      text-align: center;
-
-      opacity: 0;
-      pointer-events: none;
-
-      transition: opacity 0.25s ease;
-
-      z-index: 999;
-    }
-
-    .popup.show {
-      opacity: 1;
-    }
-
-    .hint {
-      margin-top: 14px;
-      font-size: 0.9rem;
-      opacity: 0.6;
-    }
-
-    @media (max-width: 480px) {
-
-      body {
-        padding: 12px;
-      }
-
-      .card {
-        min-height: 72vh;
-      }
-
-      .symbol {
-        font-size: 4.8rem;
-      }
-
-      .name {
-        font-size: 1.7rem;
-      }
-
-      .name-zh {
-        font-size: 1.35rem;
-      }
-
-      button,
-      select {
-        font-size: 1.05rem;
-        padding: 16px;
-      }
-    }
-  </style>
+	button,
+	select {
+		font-size: 1.05rem;
+		padding: 16px;
+	}
+}
+	</style>
 </head>
 
 <body>
 
-  <div class="top-bar">
-    <select id="quizMode" onchange="changeQuizMode()">
-      <option value="all">All</option>
-      <option value="name">Name</option>
-      <option value="symbol">Symbol</option>
-      <option value="Z">Z</option>
-    </select>
-
-    <div id="counter"></div>
-
-    <select id="profileSelect" onchange="changeProfile()">
-    </select>
-  </div>
-
-  <div class="container">
-
-    <h1 style="display:none">Periodic Flash Cards</h1>
-
-    <div class="card" id="card">
-
-      <div class="atomic-number" id="Z"></div>
-
-      <div class="mass" id="mass"></div>
-
-      <div class="symbol" id="symbol"></div>
-
-      <div class="name" id="name"></div>
-
-      <a class="name-zh" id="name-zh" target="_blank" rel="noopener noreferrer"></a>
-
-      <div class="classification" id="classification"></div>
-
-    </div>
-
-    <div class="buttons" style="display:none">
-      <button onclick="previousElement()">◀ Prev</button>
-      <button onclick="nextElement()">Next ▶</button>
-
-      <button onclick="showAnswer()">Show</button>
-      <button onclick="refreshDeck()">Refresh</button>
-    </div>
-
-    <div class="hint">
-      Tap card to <span onclick="showAnswer()">reveal</span> • Swipe <span onclick="previousElement()">left</span>/<span onclick="nextElement()">right</span> to navigate
-    </div>
-
-  </div>
-  <div class="popup" id="popup"></div>
-
-  <script>
-    const elements = [
-        { Z:   1, symbol: "H",  name: "Hydrogen",      nameZh: "氢", row: 1, classification: 5, mass: "1.008" , wikiZh: "https://zh.wikipedia.org/wiki/氢" }
-       ,{ Z:   2, symbol: "He", name: "Helium",        nameZh: "氦", row: 1, classification: 6, mass: "4.0026", wikiZh: "https://zh.wikipedia.org/wiki/氦" }
-       ,{ Z:   3, symbol: "Li", name: "Lithium",       nameZh: "锂", row: 2, classification: 0, mass: "6.94"  , wikiZh: "https://zh.wikipedia.org/wiki/锂" }
-       ,{ Z:   4, symbol: "Be", name: "Beryllium",     nameZh: "铍", row: 2, classification: 1, mass: "9.0122", wikiZh: "https://zh.wikipedia.org/wiki/铍" }
-       ,{ Z:   5, symbol: "B",  name: "Boron",         nameZh: "硼", row: 2, classification: 4, mass: "10.81" , wikiZh: "https://zh.wikipedia.org/wiki/硼" }
-       ,{ Z:   6, symbol: "C",  name: "Carbon",        nameZh: "碳", row: 2, classification: 5, mass: "12.011", wikiZh: "https://zh.wikipedia.org/wiki/碳" }
-       ,{ Z:   7, symbol: "N",  name: "Nitrogen",      nameZh: "氮", row: 2, classification: 5, mass: "14.007", wikiZh: "https://zh.wikipedia.org/wiki/氮" }
-       ,{ Z:   8, symbol: "O",  name: "Oxygen",        nameZh: "氧", row: 2, classification: 5, mass: "15.999", wikiZh: "https://zh.wikipedia.org/wiki/氧" }
-       ,{ Z:   9, symbol: "F",  name: "Fluorine",      nameZh: "氟", row: 2, classification: 5, mass: "18.998", wikiZh: "https://zh.wikipedia.org/wiki/氟" }
-       ,{ Z:  10, symbol: "Ne", name: "Neon",          nameZh: "氖", row: 2, classification: 6, mass: "20.180", wikiZh: "https://zh.wikipedia.org/wiki/氖" }
-       ,{ Z:  11, symbol: "Na", name: "Sodium",        nameZh: "钠", row: 3, classification: 0, mass: "22.990", wikiZh: "https://zh.wikipedia.org/wiki/钠" }
-       ,{ Z:  12, symbol: "Mg", name: "Magnesium",     nameZh: "镁", row: 3, classification: 1, mass: "24.305", wikiZh: "https://zh.wikipedia.org/wiki/镁" }
-       ,{ Z:  13, symbol: "Al", name: "Aluminum",      nameZh: "铝", row: 3, classification: 3, mass: "26.982", wikiZh: "https://zh.wikipedia.org/wiki/铝" }
-       ,{ Z:  14, symbol: "Si", name: "Silicon",       nameZh: "硅", row: 3, classification: 4, mass: "28.085", wikiZh: "https://zh.wikipedia.org/wiki/硅" }
-       ,{ Z:  15, symbol: "P",  name: "Phosphorus",    nameZh: "磷", row: 3, classification: 5, mass: "30.974", wikiZh: "https://zh.wikipedia.org/wiki/磷" }
-       ,{ Z:  16, symbol: "S",  name: "Sulfur",        nameZh: "硫", row: 3, classification: 5, mass: "32.06" , wikiZh: "https://zh.wikipedia.org/wiki/硫" }
-       ,{ Z:  17, symbol: "Cl", name: "Chlorine",      nameZh: "氯", row: 3, classification: 5, mass: "35.45" , wikiZh: "https://zh.wikipedia.org/wiki/氯" }
-       ,{ Z:  18, symbol: "Ar", name: "Argon",         nameZh: "氩", row: 3, classification: 6, mass: "39.948", wikiZh: "https://zh.wikipedia.org/wiki/氩" }
-       ,{ Z:  19, symbol: "K",  name: "Potassium",     nameZh: "钾", row: 4, classification: 0, mass: "39.098", wikiZh: "https://zh.wikipedia.org/wiki/钾" }
-       ,{ Z:  20, symbol: "Ca", name: "Calcium",       nameZh: "钙", row: 4, classification: 1, mass: "40.078", wikiZh: "https://zh.wikipedia.org/wiki/钙" }
-       ,{ Z:  21, symbol: "Sc", name: "Scandium",      nameZh: "钪", row: 4, classification: 2, mass: "44.956", wikiZh: "https://zh.wikipedia.org/wiki/钪" }
-       ,{ Z:  22, symbol: "Ti", name: "Titanium",      nameZh: "钛", row: 4, classification: 2, mass: "47.867", wikiZh: "https://zh.wikipedia.org/wiki/钛" }
-       ,{ Z:  23, symbol: "V",  name: "Vanadium",      nameZh: "钒", row: 4, classification: 2, mass: "50.942", wikiZh: "https://zh.wikipedia.org/wiki/钒" }
-       ,{ Z:  24, symbol: "Cr", name: "Chromium",      nameZh: "铬", row: 4, classification: 2, mass: "51.996", wikiZh: "https://zh.wikipedia.org/wiki/铬" }
-       ,{ Z:  25, symbol: "Mn", name: "Manganese",     nameZh: "锰", row: 4, classification: 2, mass: "54.938", wikiZh: "https://zh.wikipedia.org/wiki/锰" }
-       ,{ Z:  26, symbol: "Fe", name: "Iron",          nameZh: "铁", row: 4, classification: 2, mass: "55.845", wikiZh: "https://zh.wikipedia.org/wiki/铁" }
-       ,{ Z:  27, symbol: "Co", name: "Cobalt",        nameZh: "钴", row: 4, classification: 2, mass: "58.933", wikiZh: "https://zh.wikipedia.org/wiki/钴" }
-       ,{ Z:  28, symbol: "Ni", name: "Nickel",        nameZh: "镍", row: 4, classification: 2, mass: "58.693", wikiZh: "https://zh.wikipedia.org/wiki/镍" }
-       ,{ Z:  29, symbol: "Cu", name: "Copper",        nameZh: "铜", row: 4, classification: 2, mass: "63.546", wikiZh: "https://zh.wikipedia.org/wiki/铜" }
-       ,{ Z:  30, symbol: "Zn", name: "Zinc",          nameZh: "锌", row: 4, classification: 2, mass: "65.38" , wikiZh: "https://zh.wikipedia.org/wiki/锌" }
-       ,{ Z:  31, symbol: "Ga", name: "Gallium",       nameZh: "镓", row: 4, classification: 3, mass: "69.723", wikiZh: "https://zh.wikipedia.org/wiki/镓" }
-       ,{ Z:  32, symbol: "Ge", name: "Germanium",     nameZh: "锗", row: 4, classification: 4, mass: "72.630", wikiZh: "https://zh.wikipedia.org/wiki/锗" }
-       ,{ Z:  33, symbol: "As", name: "Arsenic",       nameZh: "砷", row: 4, classification: 4, mass: "74.922", wikiZh: "https://zh.wikipedia.org/wiki/砷" }
-       ,{ Z:  34, symbol: "Se", name: "Selenium",      nameZh: "硒", row: 4, classification: 5, mass: "78.971", wikiZh: "https://zh.wikipedia.org/wiki/硒" }
-       ,{ Z:  35, symbol: "Br", name: "Bromine",       nameZh: "溴", row: 4, classification: 5, mass: "79.904", wikiZh: "https://zh.wikipedia.org/wiki/溴" }
-       ,{ Z:  36, symbol: "Kr", name: "Krypton",       nameZh: "氪", row: 4, classification: 6, mass: "83.798", wikiZh: "https://zh.wikipedia.org/wiki/氪" }
-       ,{ Z:  37, symbol: "Rb", name: "Rubidium",      nameZh: "铷", row: 5, classification: 0, mass: "85.468", wikiZh: "https://zh.wikipedia.org/wiki/铷" }
-       ,{ Z:  38, symbol: "Sr", name: "Strontium",     nameZh: "锶", row: 5, classification: 1, mass: "87.62" , wikiZh: "https://zh.wikipedia.org/wiki/锶" }
-       ,{ Z:  39, symbol: "Y",  name: "Yttrium",       nameZh: "钇", row: 5, classification: 2, mass: "88.906", wikiZh: "https://zh.wikipedia.org/wiki/钇" }
-       ,{ Z:  40, symbol: "Zr", name: "Zirconium",     nameZh: "锆", row: 5, classification: 2, mass: "91.224", wikiZh: "https://zh.wikipedia.org/wiki/锆" }
-       ,{ Z:  41, symbol: "Nb", name: "Niobium",       nameZh: "铌", row: 5, classification: 2, mass: "92.906", wikiZh: "https://zh.wikipedia.org/wiki/铌" }
-       ,{ Z:  42, symbol: "Mo", name: "Molybdenum",    nameZh: "钼", row: 5, classification: 2, mass: "95.95" , wikiZh: "https://zh.wikipedia.org/wiki/钼" }
-       ,{ Z:  43, symbol: "Tc", name: "Technetium",    nameZh: "锝", row: 5, classification: 2, mass: "98"    , wikiZh: "https://zh.wikipedia.org/wiki/锝" }
-       ,{ Z:  44, symbol: "Ru", name: "Ruthenium",     nameZh: "钌", row: 5, classification: 2, mass: "101.07", wikiZh: "https://zh.wikipedia.org/wiki/钌" }
-       ,{ Z:  45, symbol: "Rh", name: "Rhodium",       nameZh: "铑", row: 5, classification: 2, mass: "102.91", wikiZh: "https://zh.wikipedia.org/wiki/铑" }
-       ,{ Z:  46, symbol: "Pd", name: "Palladium",     nameZh: "钯", row: 5, classification: 2, mass: "106.42", wikiZh: "https://zh.wikipedia.org/wiki/钯" }
-       ,{ Z:  47, symbol: "Ag", name: "Silver",        nameZh: "银", row: 5, classification: 2, mass: "107.87", wikiZh: "https://zh.wikipedia.org/wiki/银" }
-       ,{ Z:  48, symbol: "Cd", name: "Cadmium",       nameZh: "镉", row: 5, classification: 2, mass: "112.41", wikiZh: "https://zh.wikipedia.org/wiki/镉" }
-       ,{ Z:  49, symbol: "In", name: "Indium",        nameZh: "铟", row: 5, classification: 3, mass: "114.82", wikiZh: "https://zh.wikipedia.org/wiki/铟" }
-       ,{ Z:  50, symbol: "Sn", name: "Tin",           nameZh: "锡", row: 5, classification: 3, mass: "118.71", wikiZh: "https://zh.wikipedia.org/wiki/锡" }
-       ,{ Z:  51, symbol: "Sb", name: "Antimony",      nameZh: "锑", row: 5, classification: 4, mass: "121.76", wikiZh: "https://zh.wikipedia.org/wiki/锑" }
-       ,{ Z:  52, symbol: "Te", name: "Tellurium",     nameZh: "碲", row: 5, classification: 4, mass: "127.60", wikiZh: "https://zh.wikipedia.org/wiki/碲" }
-       ,{ Z:  53, symbol: "I",  name: "Iodine",        nameZh: "碘", row: 5, classification: 5, mass: "126.90", wikiZh: "https://zh.wikipedia.org/wiki/碘" }
-       ,{ Z:  54, symbol: "Xe", name: "Xenon",         nameZh: "氙", row: 5, classification: 6, mass: "131.29", wikiZh: "https://zh.wikipedia.org/wiki/氙" }
-       ,{ Z:  55, symbol: "Cs", name: "Cesium",        nameZh: "铯", row: 6, classification: 0, mass: "132.91", wikiZh: "https://zh.wikipedia.org/wiki/铯" }
-       ,{ Z:  56, symbol: "Ba", name: "Barium",        nameZh: "钡", row: 6, classification: 1, mass: "137.33", wikiZh: "https://zh.wikipedia.org/wiki/钡" }
-       ,{ Z:  57, symbol: "La", name: "Lanthanum",     nameZh: "镧", row: 6, classification: 7, mass: "138.91", wikiZh: "https://zh.wikipedia.org/wiki/镧" }
-       ,{ Z:  58, symbol: "Ce", name: "Cerium",        nameZh: "铈", row: 6, classification: 7, mass: "140.12", wikiZh: "https://zh.wikipedia.org/wiki/铈" }
-       ,{ Z:  59, symbol: "Pr", name: "Praseodymium",  nameZh: "镨", row: 6, classification: 7, mass: "140.91", wikiZh: "https://zh.wikipedia.org/wiki/镨" }
-       ,{ Z:  60, symbol: "Nd", name: "Neodymium",     nameZh: "钕", row: 6, classification: 7, mass: "144.24", wikiZh: "https://zh.wikipedia.org/wiki/钕" }
-       ,{ Z:  61, symbol: "Pm", name: "Promethium",    nameZh: "钷", row: 6, classification: 7, mass: "145"   , wikiZh: "https://zh.wikipedia.org/wiki/钷" }
-       ,{ Z:  62, symbol: "Sm", name: "Samarium",      nameZh: "钐", row: 6, classification: 7, mass: "150.36", wikiZh: "https://zh.wikipedia.org/wiki/钐" }
-       ,{ Z:  63, symbol: "Eu", name: "Europium",      nameZh: "铕", row: 6, classification: 7, mass: "151.96", wikiZh: "https://zh.wikipedia.org/wiki/铕" }
-       ,{ Z:  64, symbol: "Gd", name: "Gadolinium",    nameZh: "钆", row: 6, classification: 7, mass: "157.25", wikiZh: "https://zh.wikipedia.org/wiki/钆" }
-       ,{ Z:  65, symbol: "Tb", name: "Terbium",       nameZh: "铽", row: 6, classification: 7, mass: "158.93", wikiZh: "https://zh.wikipedia.org/wiki/铽" }
-       ,{ Z:  66, symbol: "Dy", name: "Dysprosium",    nameZh: "镝", row: 6, classification: 7, mass: "162.50", wikiZh: "https://zh.wikipedia.org/wiki/镝" }
-       ,{ Z:  67, symbol: "Ho", name: "Holmium",       nameZh: "钬", row: 6, classification: 7, mass: "164.93", wikiZh: "https://zh.wikipedia.org/wiki/钬" }
-       ,{ Z:  68, symbol: "Er", name: "Erbium",        nameZh: "铒", row: 6, classification: 7, mass: "167.26", wikiZh: "https://zh.wikipedia.org/wiki/铒" }
-       ,{ Z:  69, symbol: "Tm", name: "Thulium",       nameZh: "铥", row: 6, classification: 7, mass: "168.93", wikiZh: "https://zh.wikipedia.org/wiki/铥" }
-       ,{ Z:  70, symbol: "Yb", name: "Ytterbium",     nameZh: "镱", row: 6, classification: 7, mass: "173.05", wikiZh: "https://zh.wikipedia.org/wiki/镱" }
-       ,{ Z:  71, symbol: "Lu", name: "Lutetium",      nameZh: "镥", row: 6, classification: 7, mass: "174.97", wikiZh: "https://zh.wikipedia.org/wiki/镥" }
-       ,{ Z:  72, symbol: "Hf", name: "Hafnium",       nameZh: "铪", row: 6, classification: 2, mass: "178.49", wikiZh: "https://zh.wikipedia.org/wiki/铪" }
-       ,{ Z:  73, symbol: "Ta", name: "Tantalum",      nameZh: "钽", row: 6, classification: 2, mass: "180.95", wikiZh: "https://zh.wikipedia.org/wiki/钽" }
-       ,{ Z:  74, symbol: "W",  name: "Tungsten",      nameZh: "钨", row: 6, classification: 2, mass: "183.84", wikiZh: "https://zh.wikipedia.org/wiki/钨" }
-       ,{ Z:  75, symbol: "Re", name: "Rhenium",       nameZh: "铼", row: 6, classification: 2, mass: "186.21", wikiZh: "https://zh.wikipedia.org/wiki/铼" }
-       ,{ Z:  76, symbol: "Os", name: "Osmium",        nameZh: "锇", row: 6, classification: 2, mass: "190.23", wikiZh: "https://zh.wikipedia.org/wiki/锇" }
-       ,{ Z:  77, symbol: "Ir", name: "Iridium",       nameZh: "铱", row: 6, classification: 2, mass: "192.22", wikiZh: "https://zh.wikipedia.org/wiki/铱" }
-       ,{ Z:  78, symbol: "Pt", name: "Platinum",      nameZh: "铂", row: 6, classification: 2, mass: "195.08", wikiZh: "https://zh.wikipedia.org/wiki/铂" }
-       ,{ Z:  79, symbol: "Au", name: "Gold",          nameZh: "金", row: 6, classification: 2, mass: "196.97", wikiZh: "https://zh.wikipedia.org/wiki/金" }
-       ,{ Z:  80, symbol: "Hg", name: "Mercury",       nameZh: "汞", row: 6, classification: 2, mass: "200.59", wikiZh: "https://zh.wikipedia.org/wiki/汞" }
-       ,{ Z:  81, symbol: "Tl", name: "Thallium",      nameZh: "铊", row: 6, classification: 3, mass: "204.38", wikiZh: "https://zh.wikipedia.org/wiki/铊" }
-       ,{ Z:  82, symbol: "Pb", name: "Lead",          nameZh: "铅", row: 6, classification: 3, mass: "207.2" , wikiZh: "https://zh.wikipedia.org/wiki/铅" }
-       ,{ Z:  83, symbol: "Bi", name: "Bismuth",       nameZh: "铋", row: 6, classification: 3, mass: "208.98", wikiZh: "https://zh.wikipedia.org/wiki/铋" }
-       ,{ Z:  84, symbol: "Po", name: "Polonium",      nameZh: "钋", row: 6, classification: 4, mass: "209"   , wikiZh: "https://zh.wikipedia.org/wiki/钋" }
-       ,{ Z:  85, symbol: "At", name: "Astatine",      nameZh: "砹", row: 6, classification: 4, mass: "210"   , wikiZh: "https://zh.wikipedia.org/wiki/砹" }
-       ,{ Z:  86, symbol: "Rn", name: "Radon",         nameZh: "氡", row: 6, classification: 6, mass: "222"   , wikiZh: "https://zh.wikipedia.org/wiki/氡" }
-       ,{ Z:  87, symbol: "Fr", name: "Francium",      nameZh: "钫", row: 7, classification: 0, mass: "223"   , wikiZh: "https://zh.wikipedia.org/wiki/钫" }
-       ,{ Z:  88, symbol: "Ra", name: "Radium",        nameZh: "镭", row: 7, classification: 1, mass: "226"   , wikiZh: "https://zh.wikipedia.org/wiki/镭" }
-       ,{ Z:  89, symbol: "Ac", name: "Actinium",      nameZh: "锕", row: 7, classification: 8, mass: "227"   , wikiZh: "https://zh.wikipedia.org/wiki/锕" }
-       ,{ Z:  90, symbol: "Th", name: "Thorium",       nameZh: "钍", row: 7, classification: 8, mass: "232.04", wikiZh: "https://zh.wikipedia.org/wiki/钍" }
-       ,{ Z:  91, symbol: "Pa", name: "Protactinium",  nameZh: "镤", row: 7, classification: 8, mass: "231.04", wikiZh: "https://zh.wikipedia.org/wiki/镤" }
-       ,{ Z:  92, symbol: "U",  name: "Uranium",       nameZh: "铀", row: 7, classification: 8, mass: "238.03", wikiZh: "https://zh.wikipedia.org/wiki/铀" }
-       ,{ Z:  93, symbol: "Np", name: "Neptunium",     nameZh: "镎", row: 7, classification: 8, mass: "237"   , wikiZh: "https://zh.wikipedia.org/wiki/镎" }
-       ,{ Z:  94, symbol: "Pu", name: "Plutonium",     nameZh: "钚", row: 7, classification: 8, mass: "244"   , wikiZh: "https://zh.wikipedia.org/wiki/钚" }
-       ,{ Z:  95, symbol: "Am", name: "Americium",     nameZh: "镅", row: 7, classification: 8, mass: "243"   , wikiZh: "https://zh.wikipedia.org/wiki/镅" }
-       ,{ Z:  96, symbol: "Cm", name: "Curium",        nameZh: "锔", row: 7, classification: 8, mass: "247"   , wikiZh: "https://zh.wikipedia.org/wiki/锔" }
-       ,{ Z:  97, symbol: "Bk", name: "Berkelium",     nameZh: "锫", row: 7, classification: 8, mass: "247"   , wikiZh: "https://zh.wikipedia.org/wiki/锫" }
-       ,{ Z:  98, symbol: "Cf", name: "Californium",   nameZh: "锎", row: 7, classification: 8, mass: "251"   , wikiZh: "https://zh.wikipedia.org/wiki/锎" }
-       ,{ Z:  99, symbol: "Es", name: "Einsteinium",   nameZh: "锿", row: 7, classification: 8, mass: "252"   , wikiZh: "https://zh.wikipedia.org/wiki/锿" }
-       ,{ Z: 100, symbol: "Fm", name: "Fermium",       nameZh: "镄", row: 7, classification: 8, mass: "257"   , wikiZh: "https://zh.wikipedia.org/wiki/镄" }
-       ,{ Z: 101, symbol: "Md", name: "Mendelevium",   nameZh: "钔", row: 7, classification: 8, mass: "258"   , wikiZh: "https://zh.wikipedia.org/wiki/钔" }
-       ,{ Z: 102, symbol: "No", name: "Nobelium",      nameZh: "锘", row: 7, classification: 8, mass: "259"   , wikiZh: "https://zh.wikipedia.org/wiki/锘" }
-       ,{ Z: 103, symbol: "Lr", name: "Lawrencium",    nameZh: "铹", row: 7, classification: 8, mass: "266"   , wikiZh: "https://zh.wikipedia.org/wiki/铹" }
-       ,{ Z: 104, symbol: "Rf", name: "Rutherfordium", nameZh: "𬬻", row: 7, classification: 2, mass: "267"   , wikiZh: "https://zh.wikipedia.org/wiki/𬬻" }
-       ,{ Z: 105, symbol: "Db", name: "Dubnium",       nameZh: "𬭊", row: 7, classification: 2, mass: "268"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭊" }
-       ,{ Z: 106, symbol: "Sg", name: "Seaborgium",    nameZh: "𬭳", row: 7, classification: 2, mass: "269"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭳" }
-       ,{ Z: 107, symbol: "Bh", name: "Bohrium",       nameZh: "𬭛", row: 7, classification: 2, mass: "270"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭛" }
-       ,{ Z: 108, symbol: "Hs", name: "Hassium",       nameZh: "𬭶", row: 7, classification: 2, mass: "277"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭶" }
-       ,{ Z: 109, symbol: "Mt", name: "Meitnerium",    nameZh: "鿏", row: 7, classification: 2, mass: "278"   , wikiZh: "https://zh.wikipedia.org/wiki/鿏" }
-       ,{ Z: 110, symbol: "Ds", name: "Darmstadtium",  nameZh: "𫟼", row: 7, classification: 2, mass: "281"   , wikiZh: "https://zh.wikipedia.org/wiki/𫟼" }
-       ,{ Z: 111, symbol: "Rg", name: "Roentgenium",   nameZh: "𬬭", row: 7, classification: 2, mass: "282"   , wikiZh: "https://zh.wikipedia.org/wiki/𬬭" }
-       ,{ Z: 112, symbol: "Cn", name: "Copernicium",   nameZh: "鿔", row: 7, classification: 2, mass: "285"   , wikiZh: "https://zh.wikipedia.org/wiki/鿔" }
-       ,{ Z: 113, symbol: "Nh", name: "Nihonium",      nameZh: "鿭", row: 7, classification: 3, mass: "286"   , wikiZh: "https://zh.wikipedia.org/wiki/鿭" }
-       ,{ Z: 114, symbol: "Fl", name: "Flerovium",     nameZh: "𫓧", row: 7, classification: 3, mass: "289"   , wikiZh: "https://zh.wikipedia.org/wiki/𫓧" }
-       ,{ Z: 115, symbol: "Mc", name: "Moscovium",     nameZh: "镆", row: 7, classification: 3, mass: "290"   , wikiZh: "https://zh.wikipedia.org/wiki/镆" }
-       ,{ Z: 116, symbol: "Lv", name: "Livermorium",   nameZh: "𫟷", row: 7, classification: 3, mass: "293"   , wikiZh: "https://zh.wikipedia.org/wiki/𫟷" }
-       ,{ Z: 117, symbol: "Ts", name: "Tennessine",    nameZh: "鿬", row: 7, classification: 5, mass: "294"   , wikiZh: "https://zh.wikipedia.org/wiki/鿬" }
-       ,{ Z: 118, symbol: "Og", name: "Oganesson",     nameZh: "鿫", row: 7, classification: 6, mass: "294"   , wikiZh: "https://zh.wikipedia.org/wiki/鿫" }
-    ];
-
-    const classifications = [
-        { idx: 0, color: "#e2ca62", name: "Alkali metal"          }
-       ,{ idx: 1, color: "#e0e35c", name: "Alkaline earth metal"  }
-       ,{ idx: 2, color: "#e8c1b4", name: "Transition metal"      }
-       ,{ idx: 3, color: "#a9d0df", name: "Post-transition metal" }
-       ,{ idx: 4, color: "#93d1c3", name: "Metalloid"             }
-       ,{ idx: 5, color: "#88dc83", name: "Reactive nonmetal"     }
-       ,{ idx: 6, color: "#d4b2d8", name: "Noble gas"             }
-       ,{ idx: 7, color: "#dcc89a", name: "Lanthanoid"            }
-       ,{ idx: 8, color: "#e1bfd0", name: "Actinoid"              }
-    ];
-
-    // =========================================================
-    // FILTER PROFILES
-    // =========================================================
-
-    const profiles = [
-        { name: "Common", filter: [ {row:[1,2,3,4,5]}, {row:[6],classification:[1,2,3,4,5,6,7]}, {Z:[57,87,88,89,92,94]} ] }
-       ,{ name: "Metalloid", filter: [ {classification:[4]} ] }
-       ,{ name: "Transition", filter: [ {classification:[2]} ] }
-       ,{ name: "All" }
-    ];
-    // Active filter
-    let filter = profiles[0].filter;
-
-    const elCard = document.getElementById("card")
-    const elZ = document.getElementById("Z");
-    const elSymbol = document.getElementById("symbol");
-    const elName = document.getElementById("name");
-    const elNameZh = document.getElementById("name-zh");
-    const elMass = document.getElementById("mass");
-    const elClassification = document.getElementById("classification");
-    const elMode = document.getElementById("quizMode");
-    const elProfile = document.getElementById("profileSelect");
-    const elCounter = document.getElementById("counter");
-
-    // =========================================================
-    // RANDOMIZED DECK SYSTEM
-    // =========================================================
-
-    let deck = [];
-    let currentIndex = 0;
-
-    function showWarning(message) {
-      //alert(message);
-      const popup = document.getElementById("popup");
-      popup.textContent = message;
-      popup.classList.add("show");
-      clearTimeout(showWarning.timeout);
-      showWarning.timeout = setTimeout(() => {
-        popup.classList.remove("show");
-      }, 2000);
-    }
-
-    function populateProfiles() {
-      elProfile.innerHTML = "";
-      profiles.forEach((profile, index) => {
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = profile.name;
-        elProfile.appendChild(option);
-      });
-    }
-
-    function changeProfile() {
-        const profileIndex = Number(elProfile.value);
-        localStorage.setItem("periodic-profile-index", profileIndex);
-        filter = profiles[profileIndex].filter;
-        refreshDeck();
-    }
-
-    function changeQuizMode() {
-        localStorage.setItem("periodic-quiz-mode",elMode.value);
-        applyQuizMode();
-    }
-
-    function updateCounter() {
-      if (!deck.length) {
-        elCounter.textContent = "";
-        return;
-      }
-      elCounter.textContent = `${currentIndex + 1} of ${deck.length}`;
-    }
-
-    function shuffle(array) {
-      const arr = [...array];
-
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-
-      return arr;
-    }
-
-    function refreshDeck() {
-      // No filter rules -> include all elements
-      if (!filter || !filter.length) {
-        deck = shuffle(elements);
-      } else {
-        deck = shuffle(
-          elements.filter(element =>
-            // Element matches if it matches ANY rule
-            filter.some(rule =>
-              // Rule matches only if ALL attributes match
-              Object.entries(rule).every(
-                ([key, allowedValues]) =>
-                  Array.isArray(allowedValues)
-                  && allowedValues.includes(element[key])
-              )
-            )
-          )
-        );
-      }
-
-      currentIndex = 0;
-      if (deck.length === 0) {
-        showWarning("No elements matched filter.");
-        return;
-      }
-      renderCurrentElement();
-    }
-
-    function renderCurrentElement() {
-
-      const element = deck[currentIndex];
-
-      elZ.textContent = element.Z;
-      elSymbol.textContent = element.symbol;
-      elMass.textContent = element.mass;
-      elName.textContent = element.name;
-      elNameZh.textContent = element.nameZh || "";
-      //elNameZh.href = element.wikiZh || "#";
-
-      elClassification.textContent =
-        classifications[element.classification].name;
-
-      elCard.style.backgroundColor =
-        classifications[element.classification].color;
-
-      updateCounter();
-      applyQuizMode();
-    }
-
-    function nextElement() {
-        if (currentIndex >= deck.length - 1) {
-          showWarning("Reached end of deck. Tap Refresh or reload page.");
-          return;
-        }
-        currentIndex++;
-        renderCurrentElement();
-    }
-
-    function previousElement() {
-        if (currentIndex <= 0) {
-          showWarning("Already at beginning of deck.");
-          return;
-        }
-        currentIndex--;
-        renderCurrentElement();
-    }
-
-    // =========================================================
-    // QUIZ MODES
-    // =========================================================
-
-    function applyQuizMode() {
-
-      const mode = elMode.value;
-
-      if (mode === "all") {
-        showAnswer();
-        return;
-      }
-
-      elZ.classList.add("hidden-info");
-      elSymbol.classList.add("hidden-info");
-      elMass.classList.add("hidden-info");
-      elName.classList.add("hidden-info");
-      elNameZh.classList.add("hidden-info");
-      elClassification.classList.add("hidden-info");
-
-      if (mode === "name") {
-        elName.classList.remove("hidden-info");
-        elNameZh.classList.remove("hidden-info");
-      }
-      else if (mode === "symbol") {
-        elSymbol.classList.remove("hidden-info");
-      }
-      else if (mode === "Z") {
-        elZ.classList.remove("hidden-info");
-      }
-    }
-
-    function showAnswer() {
-
-      elZ.classList.remove("hidden-info");
-      elSymbol.classList.remove("hidden-info");
-      elMass.classList.remove("hidden-info");
-      elName.classList.remove("hidden-info");
-      elNameZh.classList.remove("hidden-info");
-      elClassification.classList.remove("hidden-info");
-    }
-
-    // =========================================================
-    // TAP CARD TO REVEAL
-    // =========================================================
-
-    elCard.addEventListener("click", () => {
-
-      const mode = elMode.value;
-
-      if (mode !== "all") {
-        showAnswer();
-      }
-    });
-
-    // =========================================================
-    // SWIPE SUPPORT
-    // =========================================================
-
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    elCard.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    elCard.addEventListener("touchend", (e) => {
-
-      touchEndX = e.changedTouches[0].screenX;
-
-      const deltaX = touchEndX - touchStartX;
-      const threshold = 50;
-
-      if (Math.abs(deltaX) < threshold) {
-        return;
-      }
-
-      if (deltaX < 0) {
-        nextElement();
-      } else {
-        previousElement();
-      }
-
-    }, { passive: true });
-
-    // =========================================================
-    // INITIALIZE
-    // =========================================================
-
-    // Initialize profile dropdown
-    populateProfiles();
-    // Restore saved profile filter
-    const savedProfileIndex = Number(localStorage.getItem("periodic-profile-index"));
-    const initialProfileIndex =
-      Number.isInteger(savedProfileIndex)
-      && savedProfileIndex >= 0
-      && savedProfileIndex < profiles.length
-        ? savedProfileIndex
-        : 0;
-    elProfile.value = initialProfileIndex;
-    filter = profiles[initialProfileIndex].filter;
-
-    // Restore saved quiz mode
-    const savedQuizMode = localStorage.getItem("periodic-quiz-mode");
-    if (savedQuizMode && Array.from(elMode.options).map(opt=>opt.value).includes(savedQuizMode)) { elMode.value = savedQuizMode; }
-
-    refreshDeck();
-
-  </script>
+	<div class="top-bar">
+		<select id="quizMode" onchange="changeQuizMode()">
+			<option value="shuffle">Shuffle</option>
+			<option value="name">Name</option>
+			<option value="symbol">Symbol</option>
+			<option value="Z">Z</option>
+			<option value="sorted">Sorted</option>
+		</select>
+
+		<div id="counter"></div>
+
+		<select id="profileSelect" onchange="changeProfile()">
+		</select>
+	</div>
+
+	<div class="container">
+
+		<h1 style="display:none">Periodic Flash Cards</h1>
+
+		<div class="card" id="card">
+
+			<div class="atomic-number" id="Z"></div>
+
+			<div class="mass" id="mass"></div>
+
+			<div class="symbol" id="symbol"></div>
+
+			<div class="name" id="name"></div>
+
+			<a class="name-zh" id="name-zh" target="_blank" rel="noopener noreferrer"></a>
+
+			<div class="classification" id="classification"></div>
+
+		</div>
+
+		<div class="buttons" style="display:none">
+			<button onclick="previousElement()">◀ Prev</button>
+			<button onclick="nextElement()">Next ▶</button>
+
+			<button onclick="showAnswer()">Show</button>
+			<button onclick="refreshDeck()">Refresh</button>
+		</div>
+
+		<div class="hint">
+			Tap card to <span onclick="showAnswer()">reveal</span> • Swipe <span onclick="previousElement()">left</span>/<span onclick="nextElement()">right</span> to navigate
+		</div>
+
+	</div>
+	<div class="popup" id="popup"></div>
+
+	<script>
+
+const elements = [
+	 { Z:   1, symbol: "H",  name: "Hydrogen",      nameZh: "氢", row: 1, classification: "rn", mass: "1.008" , wikiZh: "https://zh.wikipedia.org/wiki/氢" }
+	,{ Z:   2, symbol: "He", name: "Helium",        nameZh: "氦", row: 1, classification: "ng", mass: "4.0026", wikiZh: "https://zh.wikipedia.org/wiki/氦" }
+	,{ Z:   3, symbol: "Li", name: "Lithium",       nameZh: "锂", row: 2, classification: "ak", mass: "6.94"  , wikiZh: "https://zh.wikipedia.org/wiki/锂" }
+	,{ Z:   4, symbol: "Be", name: "Beryllium",     nameZh: "铍", row: 2, classification: "ae", mass: "9.0122", wikiZh: "https://zh.wikipedia.org/wiki/铍" }
+	,{ Z:   5, symbol: "B",  name: "Boron",         nameZh: "硼", row: 2, classification: "ld", mass: "10.81" , wikiZh: "https://zh.wikipedia.org/wiki/硼" }
+	,{ Z:   6, symbol: "C",  name: "Carbon",        nameZh: "碳", row: 2, classification: "rn", mass: "12.011", wikiZh: "https://zh.wikipedia.org/wiki/碳" }
+	,{ Z:   7, symbol: "N",  name: "Nitrogen",      nameZh: "氮", row: 2, classification: "rn", mass: "14.007", wikiZh: "https://zh.wikipedia.org/wiki/氮" }
+	,{ Z:   8, symbol: "O",  name: "Oxygen",        nameZh: "氧", row: 2, classification: "rn", mass: "15.999", wikiZh: "https://zh.wikipedia.org/wiki/氧" }
+	,{ Z:   9, symbol: "F",  name: "Fluorine",      nameZh: "氟", row: 2, classification: "rn", mass: "18.998", wikiZh: "https://zh.wikipedia.org/wiki/氟" }
+	,{ Z:  10, symbol: "Ne", name: "Neon",          nameZh: "氖", row: 2, classification: "ng", mass: "20.180", wikiZh: "https://zh.wikipedia.org/wiki/氖" }
+	,{ Z:  11, symbol: "Na", name: "Sodium",        nameZh: "钠", row: 3, classification: "ak", mass: "22.990", wikiZh: "https://zh.wikipedia.org/wiki/钠" }
+	,{ Z:  12, symbol: "Mg", name: "Magnesium",     nameZh: "镁", row: 3, classification: "ae", mass: "24.305", wikiZh: "https://zh.wikipedia.org/wiki/镁" }
+	,{ Z:  13, symbol: "Al", name: "Aluminum",      nameZh: "铝", row: 3, classification: "pt", mass: "26.982", wikiZh: "https://zh.wikipedia.org/wiki/铝" }
+	,{ Z:  14, symbol: "Si", name: "Silicon",       nameZh: "硅", row: 3, classification: "ld", mass: "28.085", wikiZh: "https://zh.wikipedia.org/wiki/硅" }
+	,{ Z:  15, symbol: "P",  name: "Phosphorus",    nameZh: "磷", row: 3, classification: "rn", mass: "30.974", wikiZh: "https://zh.wikipedia.org/wiki/磷" }
+	,{ Z:  16, symbol: "S",  name: "Sulfur",        nameZh: "硫", row: 3, classification: "rn", mass: "32.06" , wikiZh: "https://zh.wikipedia.org/wiki/硫" }
+	,{ Z:  17, symbol: "Cl", name: "Chlorine",      nameZh: "氯", row: 3, classification: "rn", mass: "35.45" , wikiZh: "https://zh.wikipedia.org/wiki/氯" }
+	,{ Z:  18, symbol: "Ar", name: "Argon",         nameZh: "氩", row: 3, classification: "ng", mass: "39.948", wikiZh: "https://zh.wikipedia.org/wiki/氩" }
+	,{ Z:  19, symbol: "K",  name: "Potassium",     nameZh: "钾", row: 4, classification: "ak", mass: "39.098", wikiZh: "https://zh.wikipedia.org/wiki/钾" }
+	,{ Z:  20, symbol: "Ca", name: "Calcium",       nameZh: "钙", row: 4, classification: "ae", mass: "40.078", wikiZh: "https://zh.wikipedia.org/wiki/钙" }
+	,{ Z:  21, symbol: "Sc", name: "Scandium",      nameZh: "钪", row: 4, classification: "tr", mass: "44.956", wikiZh: "https://zh.wikipedia.org/wiki/钪" }
+	,{ Z:  22, symbol: "Ti", name: "Titanium",      nameZh: "钛", row: 4, classification: "tr", mass: "47.867", wikiZh: "https://zh.wikipedia.org/wiki/钛" }
+	,{ Z:  23, symbol: "V",  name: "Vanadium",      nameZh: "钒", row: 4, classification: "tr", mass: "50.942", wikiZh: "https://zh.wikipedia.org/wiki/钒" }
+	,{ Z:  24, symbol: "Cr", name: "Chromium",      nameZh: "铬", row: 4, classification: "tr", mass: "51.996", wikiZh: "https://zh.wikipedia.org/wiki/铬" }
+	,{ Z:  25, symbol: "Mn", name: "Manganese",     nameZh: "锰", row: 4, classification: "tr", mass: "54.938", wikiZh: "https://zh.wikipedia.org/wiki/锰" }
+	,{ Z:  26, symbol: "Fe", name: "Iron",          nameZh: "铁", row: 4, classification: "tr", mass: "55.845", wikiZh: "https://zh.wikipedia.org/wiki/铁" }
+	,{ Z:  27, symbol: "Co", name: "Cobalt",        nameZh: "钴", row: 4, classification: "tr", mass: "58.933", wikiZh: "https://zh.wikipedia.org/wiki/钴" }
+	,{ Z:  28, symbol: "Ni", name: "Nickel",        nameZh: "镍", row: 4, classification: "tr", mass: "58.693", wikiZh: "https://zh.wikipedia.org/wiki/镍" }
+	,{ Z:  29, symbol: "Cu", name: "Copper",        nameZh: "铜", row: 4, classification: "tr", mass: "63.546", wikiZh: "https://zh.wikipedia.org/wiki/铜" }
+	,{ Z:  30, symbol: "Zn", name: "Zinc",          nameZh: "锌", row: 4, classification: "tr", mass: "65.38" , wikiZh: "https://zh.wikipedia.org/wiki/锌" }
+	,{ Z:  31, symbol: "Ga", name: "Gallium",       nameZh: "镓", row: 4, classification: "pt", mass: "69.723", wikiZh: "https://zh.wikipedia.org/wiki/镓" }
+	,{ Z:  32, symbol: "Ge", name: "Germanium",     nameZh: "锗", row: 4, classification: "ld", mass: "72.630", wikiZh: "https://zh.wikipedia.org/wiki/锗" }
+	,{ Z:  33, symbol: "As", name: "Arsenic",       nameZh: "砷", row: 4, classification: "ld", mass: "74.922", wikiZh: "https://zh.wikipedia.org/wiki/砷" }
+	,{ Z:  34, symbol: "Se", name: "Selenium",      nameZh: "硒", row: 4, classification: "rn", mass: "78.971", wikiZh: "https://zh.wikipedia.org/wiki/硒" }
+	,{ Z:  35, symbol: "Br", name: "Bromine",       nameZh: "溴", row: 4, classification: "rn", mass: "79.904", wikiZh: "https://zh.wikipedia.org/wiki/溴" }
+	,{ Z:  36, symbol: "Kr", name: "Krypton",       nameZh: "氪", row: 4, classification: "ng", mass: "83.798", wikiZh: "https://zh.wikipedia.org/wiki/氪" }
+	,{ Z:  37, symbol: "Rb", name: "Rubidium",      nameZh: "铷", row: 5, classification: "ak", mass: "85.468", wikiZh: "https://zh.wikipedia.org/wiki/铷" }
+	,{ Z:  38, symbol: "Sr", name: "Strontium",     nameZh: "锶", row: 5, classification: "ae", mass: "87.62" , wikiZh: "https://zh.wikipedia.org/wiki/锶" }
+	,{ Z:  39, symbol: "Y",  name: "Yttrium",       nameZh: "钇", row: 5, classification: "tr", mass: "88.906", wikiZh: "https://zh.wikipedia.org/wiki/钇" }
+	,{ Z:  40, symbol: "Zr", name: "Zirconium",     nameZh: "锆", row: 5, classification: "tr", mass: "91.224", wikiZh: "https://zh.wikipedia.org/wiki/锆" }
+	,{ Z:  41, symbol: "Nb", name: "Niobium",       nameZh: "铌", row: 5, classification: "tr", mass: "92.906", wikiZh: "https://zh.wikipedia.org/wiki/铌" }
+	,{ Z:  42, symbol: "Mo", name: "Molybdenum",    nameZh: "钼", row: 5, classification: "tr", mass: "95.95" , wikiZh: "https://zh.wikipedia.org/wiki/钼" }
+	,{ Z:  43, symbol: "Tc", name: "Technetium",    nameZh: "锝", row: 5, classification: "tr", mass: "98"    , wikiZh: "https://zh.wikipedia.org/wiki/锝" }
+	,{ Z:  44, symbol: "Ru", name: "Ruthenium",     nameZh: "钌", row: 5, classification: "tr", mass: "101.07", wikiZh: "https://zh.wikipedia.org/wiki/钌" }
+	,{ Z:  45, symbol: "Rh", name: "Rhodium",       nameZh: "铑", row: 5, classification: "tr", mass: "102.91", wikiZh: "https://zh.wikipedia.org/wiki/铑" }
+	,{ Z:  46, symbol: "Pd", name: "Palladium",     nameZh: "钯", row: 5, classification: "tr", mass: "106.42", wikiZh: "https://zh.wikipedia.org/wiki/钯" }
+	,{ Z:  47, symbol: "Ag", name: "Silver",        nameZh: "银", row: 5, classification: "tr", mass: "107.87", wikiZh: "https://zh.wikipedia.org/wiki/银" }
+	,{ Z:  48, symbol: "Cd", name: "Cadmium",       nameZh: "镉", row: 5, classification: "tr", mass: "112.41", wikiZh: "https://zh.wikipedia.org/wiki/镉" }
+	,{ Z:  49, symbol: "In", name: "Indium",        nameZh: "铟", row: 5, classification: "pt", mass: "114.82", wikiZh: "https://zh.wikipedia.org/wiki/铟" }
+	,{ Z:  50, symbol: "Sn", name: "Tin",           nameZh: "锡", row: 5, classification: "pt", mass: "118.71", wikiZh: "https://zh.wikipedia.org/wiki/锡" }
+	,{ Z:  51, symbol: "Sb", name: "Antimony",      nameZh: "锑", row: 5, classification: "ld", mass: "121.76", wikiZh: "https://zh.wikipedia.org/wiki/锑" }
+	,{ Z:  52, symbol: "Te", name: "Tellurium",     nameZh: "碲", row: 5, classification: "ld", mass: "127.60", wikiZh: "https://zh.wikipedia.org/wiki/碲" }
+	,{ Z:  53, symbol: "I",  name: "Iodine",        nameZh: "碘", row: 5, classification: "rn", mass: "126.90", wikiZh: "https://zh.wikipedia.org/wiki/碘" }
+	,{ Z:  54, symbol: "Xe", name: "Xenon",         nameZh: "氙", row: 5, classification: "ng", mass: "131.29", wikiZh: "https://zh.wikipedia.org/wiki/氙" }
+	,{ Z:  55, symbol: "Cs", name: "Cesium",        nameZh: "铯", row: 6, classification: "ak", mass: "132.91", wikiZh: "https://zh.wikipedia.org/wiki/铯" }
+	,{ Z:  56, symbol: "Ba", name: "Barium",        nameZh: "钡", row: 6, classification: "ae", mass: "137.33", wikiZh: "https://zh.wikipedia.org/wiki/钡" }
+	,{ Z:  57, symbol: "La", name: "Lanthanum",     nameZh: "镧", row: 6, classification: "la", mass: "138.91", wikiZh: "https://zh.wikipedia.org/wiki/镧" }
+	,{ Z:  58, symbol: "Ce", name: "Cerium",        nameZh: "铈", row: 6, classification: "la", mass: "140.12", wikiZh: "https://zh.wikipedia.org/wiki/铈" }
+	,{ Z:  59, symbol: "Pr", name: "Praseodymium",  nameZh: "镨", row: 6, classification: "la", mass: "140.91", wikiZh: "https://zh.wikipedia.org/wiki/镨" }
+	,{ Z:  60, symbol: "Nd", name: "Neodymium",     nameZh: "钕", row: 6, classification: "la", mass: "144.24", wikiZh: "https://zh.wikipedia.org/wiki/钕" }
+	,{ Z:  61, symbol: "Pm", name: "Promethium",    nameZh: "钷", row: 6, classification: "la", mass: "145"   , wikiZh: "https://zh.wikipedia.org/wiki/钷" }
+	,{ Z:  62, symbol: "Sm", name: "Samarium",      nameZh: "钐", row: 6, classification: "la", mass: "150.36", wikiZh: "https://zh.wikipedia.org/wiki/钐" }
+	,{ Z:  63, symbol: "Eu", name: "Europium",      nameZh: "铕", row: 6, classification: "la", mass: "151.96", wikiZh: "https://zh.wikipedia.org/wiki/铕" }
+	,{ Z:  64, symbol: "Gd", name: "Gadolinium",    nameZh: "钆", row: 6, classification: "la", mass: "157.25", wikiZh: "https://zh.wikipedia.org/wiki/钆" }
+	,{ Z:  65, symbol: "Tb", name: "Terbium",       nameZh: "铽", row: 6, classification: "la", mass: "158.93", wikiZh: "https://zh.wikipedia.org/wiki/铽" }
+	,{ Z:  66, symbol: "Dy", name: "Dysprosium",    nameZh: "镝", row: 6, classification: "la", mass: "162.50", wikiZh: "https://zh.wikipedia.org/wiki/镝" }
+	,{ Z:  67, symbol: "Ho", name: "Holmium",       nameZh: "钬", row: 6, classification: "la", mass: "164.93", wikiZh: "https://zh.wikipedia.org/wiki/钬" }
+	,{ Z:  68, symbol: "Er", name: "Erbium",        nameZh: "铒", row: 6, classification: "la", mass: "167.26", wikiZh: "https://zh.wikipedia.org/wiki/铒" }
+	,{ Z:  69, symbol: "Tm", name: "Thulium",       nameZh: "铥", row: 6, classification: "la", mass: "168.93", wikiZh: "https://zh.wikipedia.org/wiki/铥" }
+	,{ Z:  70, symbol: "Yb", name: "Ytterbium",     nameZh: "镱", row: 6, classification: "la", mass: "173.05", wikiZh: "https://zh.wikipedia.org/wiki/镱" }
+	,{ Z:  71, symbol: "Lu", name: "Lutetium",      nameZh: "镥", row: 6, classification: "la", mass: "174.97", wikiZh: "https://zh.wikipedia.org/wiki/镥" }
+	,{ Z:  72, symbol: "Hf", name: "Hafnium",       nameZh: "铪", row: 6, classification: "tr", mass: "178.49", wikiZh: "https://zh.wikipedia.org/wiki/铪" }
+	,{ Z:  73, symbol: "Ta", name: "Tantalum",      nameZh: "钽", row: 6, classification: "tr", mass: "180.95", wikiZh: "https://zh.wikipedia.org/wiki/钽" }
+	,{ Z:  74, symbol: "W",  name: "Tungsten",      nameZh: "钨", row: 6, classification: "tr", mass: "183.84", wikiZh: "https://zh.wikipedia.org/wiki/钨" }
+	,{ Z:  75, symbol: "Re", name: "Rhenium",       nameZh: "铼", row: 6, classification: "tr", mass: "186.21", wikiZh: "https://zh.wikipedia.org/wiki/铼" }
+	,{ Z:  76, symbol: "Os", name: "Osmium",        nameZh: "锇", row: 6, classification: "tr", mass: "190.23", wikiZh: "https://zh.wikipedia.org/wiki/锇" }
+	,{ Z:  77, symbol: "Ir", name: "Iridium",       nameZh: "铱", row: 6, classification: "tr", mass: "192.22", wikiZh: "https://zh.wikipedia.org/wiki/铱" }
+	,{ Z:  78, symbol: "Pt", name: "Platinum",      nameZh: "铂", row: 6, classification: "tr", mass: "195.08", wikiZh: "https://zh.wikipedia.org/wiki/铂" }
+	,{ Z:  79, symbol: "Au", name: "Gold",          nameZh: "金", row: 6, classification: "tr", mass: "196.97", wikiZh: "https://zh.wikipedia.org/wiki/金" }
+	,{ Z:  80, symbol: "Hg", name: "Mercury",       nameZh: "汞", row: 6, classification: "tr", mass: "200.59", wikiZh: "https://zh.wikipedia.org/wiki/汞" }
+	,{ Z:  81, symbol: "Tl", name: "Thallium",      nameZh: "铊", row: 6, classification: "pt", mass: "204.38", wikiZh: "https://zh.wikipedia.org/wiki/铊" }
+	,{ Z:  82, symbol: "Pb", name: "Lead",          nameZh: "铅", row: 6, classification: "pt", mass: "207.2" , wikiZh: "https://zh.wikipedia.org/wiki/铅" }
+	,{ Z:  83, symbol: "Bi", name: "Bismuth",       nameZh: "铋", row: 6, classification: "pt", mass: "208.98", wikiZh: "https://zh.wikipedia.org/wiki/铋" }
+	,{ Z:  84, symbol: "Po", name: "Polonium",      nameZh: "钋", row: 6, classification: "ld", mass: "209"   , wikiZh: "https://zh.wikipedia.org/wiki/钋" }
+	,{ Z:  85, symbol: "At", name: "Astatine",      nameZh: "砹", row: 6, classification: "ld", mass: "210"   , wikiZh: "https://zh.wikipedia.org/wiki/砹" }
+	,{ Z:  86, symbol: "Rn", name: "Radon",         nameZh: "氡", row: 6, classification: "ng", mass: "222"   , wikiZh: "https://zh.wikipedia.org/wiki/氡" }
+	,{ Z:  87, symbol: "Fr", name: "Francium",      nameZh: "钫", row: 7, classification: "ak", mass: "223"   , wikiZh: "https://zh.wikipedia.org/wiki/钫" }
+	,{ Z:  88, symbol: "Ra", name: "Radium",        nameZh: "镭", row: 7, classification: "ae", mass: "226"   , wikiZh: "https://zh.wikipedia.org/wiki/镭" }
+	,{ Z:  89, symbol: "Ac", name: "Actinium",      nameZh: "锕", row: 7, classification: "ac", mass: "227"   , wikiZh: "https://zh.wikipedia.org/wiki/锕" }
+	,{ Z:  90, symbol: "Th", name: "Thorium",       nameZh: "钍", row: 7, classification: "ac", mass: "232.04", wikiZh: "https://zh.wikipedia.org/wiki/钍" }
+	,{ Z:  91, symbol: "Pa", name: "Protactinium",  nameZh: "镤", row: 7, classification: "ac", mass: "231.04", wikiZh: "https://zh.wikipedia.org/wiki/镤" }
+	,{ Z:  92, symbol: "U",  name: "Uranium",       nameZh: "铀", row: 7, classification: "ac", mass: "238.03", wikiZh: "https://zh.wikipedia.org/wiki/铀" }
+	,{ Z:  93, symbol: "Np", name: "Neptunium",     nameZh: "镎", row: 7, classification: "ac", mass: "237"   , wikiZh: "https://zh.wikipedia.org/wiki/镎" }
+	,{ Z:  94, symbol: "Pu", name: "Plutonium",     nameZh: "钚", row: 7, classification: "ac", mass: "244"   , wikiZh: "https://zh.wikipedia.org/wiki/钚" }
+	,{ Z:  95, symbol: "Am", name: "Americium",     nameZh: "镅", row: 7, classification: "ac", mass: "243"   , wikiZh: "https://zh.wikipedia.org/wiki/镅" }
+	,{ Z:  96, symbol: "Cm", name: "Curium",        nameZh: "锔", row: 7, classification: "ac", mass: "247"   , wikiZh: "https://zh.wikipedia.org/wiki/锔" }
+	,{ Z:  97, symbol: "Bk", name: "Berkelium",     nameZh: "锫", row: 7, classification: "ac", mass: "247"   , wikiZh: "https://zh.wikipedia.org/wiki/锫" }
+	,{ Z:  98, symbol: "Cf", name: "Californium",   nameZh: "锎", row: 7, classification: "ac", mass: "251"   , wikiZh: "https://zh.wikipedia.org/wiki/锎" }
+	,{ Z:  99, symbol: "Es", name: "Einsteinium",   nameZh: "锿", row: 7, classification: "ac", mass: "252"   , wikiZh: "https://zh.wikipedia.org/wiki/锿" }
+	,{ Z: 100, symbol: "Fm", name: "Fermium",       nameZh: "镄", row: 7, classification: "ac", mass: "257"   , wikiZh: "https://zh.wikipedia.org/wiki/镄" }
+	,{ Z: 101, symbol: "Md", name: "Mendelevium",   nameZh: "钔", row: 7, classification: "ac", mass: "258"   , wikiZh: "https://zh.wikipedia.org/wiki/钔" }
+	,{ Z: 102, symbol: "No", name: "Nobelium",      nameZh: "锘", row: 7, classification: "ac", mass: "259"   , wikiZh: "https://zh.wikipedia.org/wiki/锘" }
+	,{ Z: 103, symbol: "Lr", name: "Lawrencium",    nameZh: "铹", row: 7, classification: "ac", mass: "266"   , wikiZh: "https://zh.wikipedia.org/wiki/铹" }
+	,{ Z: 104, symbol: "Rf", name: "Rutherfordium", nameZh: "𬬻", row: 7, classification: "tr", mass: "267"   , wikiZh: "https://zh.wikipedia.org/wiki/𬬻" }
+	,{ Z: 105, symbol: "Db", name: "Dubnium",       nameZh: "𬭊", row: 7, classification: "tr", mass: "268"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭊" }
+	,{ Z: 106, symbol: "Sg", name: "Seaborgium",    nameZh: "𬭳", row: 7, classification: "tr", mass: "269"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭳" }
+	,{ Z: 107, symbol: "Bh", name: "Bohrium",       nameZh: "𬭛", row: 7, classification: "tr", mass: "270"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭛" }
+	,{ Z: 108, symbol: "Hs", name: "Hassium",       nameZh: "𬭶", row: 7, classification: "tr", mass: "277"   , wikiZh: "https://zh.wikipedia.org/wiki/𬭶" }
+	,{ Z: 109, symbol: "Mt", name: "Meitnerium",    nameZh: "鿏", row: 7, classification: "tr", mass: "278"   , wikiZh: "https://zh.wikipedia.org/wiki/鿏" }
+	,{ Z: 110, symbol: "Ds", name: "Darmstadtium",  nameZh: "𫟼", row: 7, classification: "tr", mass: "281"   , wikiZh: "https://zh.wikipedia.org/wiki/𫟼" }
+	,{ Z: 111, symbol: "Rg", name: "Roentgenium",   nameZh: "𬬭", row: 7, classification: "tr", mass: "282"   , wikiZh: "https://zh.wikipedia.org/wiki/𬬭" }
+	,{ Z: 112, symbol: "Cn", name: "Copernicium",   nameZh: "鿔", row: 7, classification: "tr", mass: "285"   , wikiZh: "https://zh.wikipedia.org/wiki/鿔" }
+	,{ Z: 113, symbol: "Nh", name: "Nihonium",      nameZh: "鿭", row: 7, classification: "pt", mass: "286"   , wikiZh: "https://zh.wikipedia.org/wiki/鿭" }
+	,{ Z: 114, symbol: "Fl", name: "Flerovium",     nameZh: "𫓧", row: 7, classification: "pt", mass: "289"   , wikiZh: "https://zh.wikipedia.org/wiki/𫓧" }
+	,{ Z: 115, symbol: "Mc", name: "Moscovium",     nameZh: "镆", row: 7, classification: "pt", mass: "290"   , wikiZh: "https://zh.wikipedia.org/wiki/镆" }
+	,{ Z: 116, symbol: "Lv", name: "Livermorium",   nameZh: "𫟷", row: 7, classification: "pt", mass: "293"   , wikiZh: "https://zh.wikipedia.org/wiki/𫟷" }
+	,{ Z: 117, symbol: "Ts", name: "Tennessine",    nameZh: "鿬", row: 7, classification: "rn", mass: "294"   , wikiZh: "https://zh.wikipedia.org/wiki/鿬" }
+	,{ Z: 118, symbol: "Og", name: "Oganesson",     nameZh: "鿫", row: 7, classification: "ng", mass: "294"   , wikiZh: "https://zh.wikipedia.org/wiki/鿫" }
+];
+
+const classifications = {
+	 "ak": { color: "#e2ca62", name: "Alkali metal"          }
+	,"ae": { color: "#e0e35c", name: "Alkaline earth metal"  }
+	,"tr": { color: "#e8c1b4", name: "Transition metal"      }
+	,"pt": { color: "#a9d0df", name: "Post-transition metal" }
+	,"ld": { color: "#93d1c3", name: "Metalloid"             }
+	,"rn": { color: "#88dc83", name: "Reactive nonmetal"     }
+	,"ng": { color: "#d4b2d8", name: "Noble gas"             }
+	,"la": { color: "#dcc89a", name: "Lanthanoid"            }
+	,"ac": { color: "#e1bfd0", name: "Actinoid"              }
+};
+
+// =========================================================
+// FILTER PROFILES
+// =========================================================
+
+const profiles = [
+	 { name: "Common", filter: [
+		 {row:[1,2,3,4,5]}
+		,{row:[6],classification:["ak","ae","tr","pt","ld","rn","ng"]}
+		,{Z:[57,87,88,89,92,94]}
+	 ]}
+	,{ name: "Metalloid", filter: [ {classification:["ld"]} ] }
+	,{ name: "Transition", filter: [ {classification:["tr"]} ] }
+	,{ name: "All" }
+];
+// Active filter
+let filter = profiles[0].filter;
+
+const elCard = document.getElementById("card")
+const elZ = document.getElementById("Z");
+const elSymbol = document.getElementById("symbol");
+const elName = document.getElementById("name");
+const elNameZh = document.getElementById("name-zh");
+const elMass = document.getElementById("mass");
+const elClassification = document.getElementById("classification");
+const elMode = document.getElementById("quizMode");
+const elProfile = document.getElementById("profileSelect");
+const elCounter = document.getElementById("counter");
+
+// =========================================================
+// RANDOMIZED DECK SYSTEM
+// =========================================================
+
+let deck = [];
+let currentIndex = 0;
+
+function showWarning(message) {
+	//alert(message);
+	const popup = document.getElementById("popup");
+	popup.textContent = message;
+	popup.classList.add("show");
+	clearTimeout(showWarning.timeout);
+	showWarning.timeout = setTimeout(() => {
+		popup.classList.remove("show");
+	}, 2000);
+}
+
+function populateProfiles() {
+	elProfile.innerHTML = "";
+	profiles.forEach((profile, index) => {
+		const option = document.createElement("option");
+		option.value = index;
+		option.textContent = profile.name;
+		elProfile.appendChild(option);
+	});
+}
+
+function changeProfile() {
+	const profileIndex = Number(elProfile.value);
+	localStorage.setItem("periodic-profile-index", profileIndex);
+	filter = profiles[profileIndex].filter;
+	refreshDeck();
+}
+
+function changeQuizMode() {
+	localStorage.setItem("periodic-quiz-mode", elMode.value);
+	refreshDeck();
+}
+
+function updateCounter() {
+	if (!deck.length) {
+		elCounter.textContent = "";
+		return;
+	}
+	elCounter.textContent = `${currentIndex + 1} of ${deck.length}`;
+}
+
+function shuffle(array) {
+	const arr = [...array];
+
+	for (let i = arr.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[arr[i], arr[j]] = [arr[j], arr[i]];
+	}
+
+	return arr;
+}
+
+function refreshDeck() {
+	let filteredDeck;
+
+	
+	// No filter rules -> include all elements
+	if (!filter || !filter.length) {
+		filteredDeck = shuffle(elements);
+	} else {
+		filteredDeck = elements.filter(element =>
+			// Element matches if it matches ANY rule
+			filter.some(rule =>
+				// Rule matches only if ALL attributes match
+				Object.entries(rule).every(
+					([key, allowedValues]) =>
+					Array.isArray(allowedValues) &&
+					allowedValues.includes(element[key])
+				)
+			)
+		);
+	}
+
+	// Apply deck order based on quiz mode
+	if (filteredDeck.length === 0) {
+		deck = [];
+		showWarning("No elements matched filter.");
+		return;
+	} else if (elMode.value === "sorted") {
+		deck = [...filteredDeck].sort((a, b) => a.Z - b.Z);
+	} else {
+		deck = shuffle(filteredDeck);
+	}
+
+	currentIndex = 0;
+	renderCurrentElement();
+}
+
+function renderCurrentElement() {
+
+	const element = deck[currentIndex];
+
+	elZ.textContent = element.Z;
+	elSymbol.textContent = element.symbol;
+	elMass.textContent = element.mass;
+	elName.textContent = element.name;
+	elNameZh.textContent = element.nameZh || "";
+	//elNameZh.href = element.wikiZh || "#";
+
+	elClassification.textContent =
+		classifications[element.classification].name;
+
+	elCard.style.backgroundColor =
+		classifications[element.classification].color;
+
+	updateCounter();
+	applyQuizMode();
+}
+
+function nextElement() {
+	if (currentIndex >= deck.length - 1) {
+		showWarning("Reached end of deck. Tap Refresh or reload page.");
+		return;
+	}
+	currentIndex++;
+	renderCurrentElement();
+}
+
+function previousElement() {
+	if (currentIndex <= 0) {
+		showWarning("Already at beginning of deck.");
+		return;
+	}
+	currentIndex--;
+	renderCurrentElement();
+}
+
+// =========================================================
+// QUIZ MODES
+// =========================================================
+
+function applyQuizMode() {
+
+	const mode = elMode.value;
+
+	if (mode === "shuffle" || mode === "sorted") {
+		showAnswer();
+		return;
+	}
+
+	elZ.classList.add("hidden-info");
+	elSymbol.classList.add("hidden-info");
+	elMass.classList.add("hidden-info");
+	elName.classList.add("hidden-info");
+	elNameZh.classList.add("hidden-info");
+	elClassification.classList.add("hidden-info");
+
+	if (mode === "name") {
+		elName.classList.remove("hidden-info");
+		elNameZh.classList.remove("hidden-info");
+	} else if (mode === "symbol") {
+		elSymbol.classList.remove("hidden-info");
+	} else if (mode === "Z") {
+		elZ.classList.remove("hidden-info");
+	}
+}
+
+function showAnswer() {
+	elZ.classList.remove("hidden-info");
+	elSymbol.classList.remove("hidden-info");
+	elMass.classList.remove("hidden-info");
+	elName.classList.remove("hidden-info");
+	elNameZh.classList.remove("hidden-info");
+	elClassification.classList.remove("hidden-info");
+}
+
+// =========================================================
+// TAP CARD TO REVEAL
+// =========================================================
+
+elCard.addEventListener("click", () => {
+
+	const mode = elMode.value;
+
+	if (mode !== "shuffle" && mode !== "sorted") {
+		showAnswer();
+	}
+});
+
+// =========================================================
+// SWIPE SUPPORT
+// =========================================================
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+elCard.addEventListener("touchstart", (e) => {
+	touchStartX = e.changedTouches[0].screenX;
+}, {
+	passive: true
+});
+
+elCard.addEventListener("touchend", (e) => {
+
+	touchEndX = e.changedTouches[0].screenX;
+
+	const deltaX = touchEndX - touchStartX;
+	const threshold = 50;
+
+	if (Math.abs(deltaX) < threshold) {
+		return;
+	}
+
+	if (deltaX < 0) {
+		nextElement();
+	} else {
+		previousElement();
+	}
+
+}, {
+	passive: true
+});
+
+// =========================================================
+// INITIALIZE
+// =========================================================
+
+// Initialize profile dropdown
+populateProfiles();
+// Restore saved profile filter
+const savedProfileIndex = Number(localStorage.getItem("periodic-profile-index"));
+const initialProfileIndex =
+	Number.isInteger(savedProfileIndex) &&
+	savedProfileIndex >= 0 &&
+	savedProfileIndex < profiles.length ?
+	savedProfileIndex :
+	0;
+elProfile.value = initialProfileIndex;
+filter = profiles[initialProfileIndex].filter;
+
+// Restore saved quiz mode
+const savedQuizMode = localStorage.getItem("periodic-quiz-mode");
+if (savedQuizMode && Array.from(elMode.options).map(opt => opt.value).includes(savedQuizMode)) {
+	elMode.value = savedQuizMode;
+}
+
+refreshDeck();
+
+	</script>
 
 </body>
 </html>
